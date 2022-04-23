@@ -182,7 +182,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-04-23 21:31:21 / Modified: 23:13:12" itemprop="dateCreated datePublished" datetime="2022-04-23T21:31:21+08:00">2022-04-23</time>
+              <time title="Created: 2022-04-23 21:31:21 / Modified: 23:16:34" itemprop="dateCreated datePublished" datetime="2022-04-23T21:31:21+08:00">2022-04-23</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -219,7 +219,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>发生拥塞控制的原因：资源(带宽、交换节点的缓存、处理机)的需求&gt;可用资源。拥塞控制就是为了防止过多的数据注入到网络中，这样可以使网络中的路由器或者链路不至于过载。</p>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>发生拥塞控制的原因：资源(带宽、交换节点的缓存、处理机)的需求&gt;可用资源。拥塞控制就是为了防止过多的数据注入到网络中，这样可以使网络中的路由器或者链路不至于过载。</p>
 <p>本篇学习笔记需要理清的问题有以下几点：</p>
 <ul>
 <li><p>TCP是如何控制网络拥塞的？有什么局限性？</p>
@@ -229,127 +229,14 @@
 <li><p>Google提出的BBR算法和TCP广泛使用的拥塞算法相比，有何不同？有何优缺点？</p>
 </li>
 </ul>
-<h1 id="带宽时延乘积（bandwidth-delay-product）"><a href="#带宽时延乘积（bandwidth-delay-product）" class="headerlink" title="带宽时延乘积（bandwidth-delay product）"></a>带宽时延乘积（bandwidth-delay product）</h1><p>首先先介绍一下带宽时延乘积的概念。</p>
-<blockquote>
-<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/hackerwin7/article/details/21969307">https://blog.csdn.net/hackerwin7/article/details/21969307</a></p>
-</blockquote>
-<ul>
-<li><p>带宽：指单位时间内从发送端到接收端所能通过的“最高数据率”，是一种硬件限制。TCP发送端和接收端的数据传输数率不可能超过两点间的带宽限制。类比于一条马路上的车道，车道数越多，每秒能并行前进的车辆也就越多；带宽也是如此，带宽越大，每秒能发送的数据量也就越大。</p>
-</li>
-<li><p>RTT（Round Trip Time）：表示从发送端到接收端的一去一回需要的时间，TCP在数据传输过程中会对RTT进行采样（即对发送数据到其收到ACK的时间差进行测量，并根据测量值更新RTT值），TCP根据得到的RTT值更新RTO（Retransmission TimeOut）值，即重传间隔。发送端对每个发出的数据包进行计时，如果在RTO时间内没有收到所发出的数据包的对应ACK，则认为数据包丢失，将重传数据。一般RTO值都比采样得到的RTT值要大。</p>
-</li>
-<li><p>带宽时延乘积：即带宽<em>RTT，该值等于发送端到接收端单向通道的数据容积的两倍，即放满单向网络通道的数据量为带宽</em>RTT&#x2F;2。</p>
-</li>
-</ul>
-<p>设滑动窗口大小为W， 发送端和接收端的带宽为B， RTT为Tr。TCP发送数据时受滑动窗口的限制，当TCP将滑动窗口中的数据都发出后，在收到第一个ACK之前，可发送的滑动窗口大小是0，不能再发送数据了，必须等待ACK包使滑动窗口移动。在理想情况下，数据发出后的RTT时间后ACK包到达发送端，现在假设TCP在一个RTT时间内能发出的最大数据量为W，在不考虑带宽限制的情况下，TCP发包的最大速率是 V &#x3D; W&#x2F;Tr。</p>
-<p>当V&lt;B时，带宽不构成瓶颈，此时速率的限制主要来源于窗口大小限制；当V&gt;B时，速率限制来源于带宽限制。</p>
-<p>V与B的关系可以替换成W、Tr与B的关系，将 V &#x3D; W&#x2F;Tr带入可以得到，当W &lt;&#x3D; B<em>Tr，带宽不构成瓶颈；当W &gt; B</em>Tr时，带宽构成瓶颈。</p>
-<p>B<em>Tr就是带宽时延乘积。取W为TCP能支持窗口的最大值Wmax，当Wmax &lt;&#x3D; B</em>Tr时，此时发送和接收端之间的通道就是所谓的<strong>长肥网络</strong>（LFN，long fat network），即带宽时延乘积较大的通道。在我们平时生活中使用的宽带网络，因为带宽都比较小，从而B*Tr也比较小，再加上网络情况比较复杂，拥塞情况比较常见，所以这些网络环境下，TCP速率的主要限制因素在于带宽，丢包率等。</p>
-<p>在W&lt;B*Tr时，影响TCP发送数据速率的最直接的因素是滑动窗口的大小，TCP的拥塞控制策略是通过控制窗口大小来控制速率，而慢启动，拥塞避免这些算法实际上就是控制窗口增长方式的算法，也就是控制窗口增加的加速度大小。</p>
-<h1 id="基于丢包的拥塞控制算法（Loss-based）"><a href="#基于丢包的拥塞控制算法（Loss-based）" class="headerlink" title="基于丢包的拥塞控制算法（Loss-based）"></a>基于丢包的拥塞控制算法（Loss-based）</h1><h2 id="RENO算法（教科书上的算法）"><a href="#RENO算法（教科书上的算法）" class="headerlink" title="RENO算法（教科书上的算法）"></a>RENO算法（教科书上的算法）</h2><p>TCP协议传统的拥塞控制算法为：慢开始、拥塞避免、快重传、快启动。</p>
-<ul>
-<li><p><strong>慢启动</strong>：主机开始发送数据的时候，如果立即将大量的数据注入到网络中，可能会出现网络的拥塞。慢启动算法就是在主机刚开始发送数据报的时候先探测一下网络的状况，如果网络状况良好，发送方每发送一次报文段都能正确接收到报文段ACK，就增加拥塞窗口（congestion window，简称cwnd）的大小，由1-&gt;2-&gt;4-&gt;8（以报文段长度为单位）这样指数级增加cwnd大小。</p>
-</li>
-<li><p><strong>拥塞避免</strong>：由于cwnd是指数级增长，为了防止cwnd增加过快而导致网络拥塞，需要设置一个慢启动的拥塞窗口阈值ssthresh。当cwnd &lt; ssthresh，使用慢启动算法；当cwnd &gt; ssthresh，使用拥塞控制算法，停用慢启动算法；当cwnd &#x3D; ssthresh，这两个算法都可以。拥塞控制算法具体为：每经历过一次往返时间就使cwnd增加1，使cwnd缓慢增长。</p>
-</li>
-<li><p><strong>快重传</strong>：接收方收到一个失序的报文段后就立刻发出理应发送的ACK报文。如果发送方连续收到三个重复的ACK，则发送方立刻重传相关报文段，而不必等待重传计时器到期。</p>
-</li>
-<li><p><strong>快恢复</strong>：当发送发连续接收到三个确认时，就把慢启动的阈值（ssthresh）减为当前cwnd的一半，然后将cwnd设置为ssthresh，继续拥塞避免算法。</p>
-</li>
-<li><p><strong>AIMD（additive-increase&#x2F;multiplicative-decrease）原则</strong>：加法增加，乘法减小。当网络频发出现超时情况时，为了减少注入到网络中的分组数，ssthresh就下降的很快；而加法增大是指执行拥塞避免算法后，拥塞窗口缓慢增大，以防止网络过早出现拥塞。</p>
-</li>
-</ul>
-<p>经典的示意图如下图所示：</p>
-<img src="/2022/04/23/TCP/RENO.png" class="">
-
-<p>注意：滑动窗口的大小实际上是由两个窗口共同决定的，一个是接收端的通告窗口，另一个是拥塞窗口，滑动窗口的大小就是通告窗口和拥塞窗口的较小值。通告窗口的窗口值在TCP协议头部信息中有，会随着数据的ACK包发送给发送端，这个值表示的是在接收端的TCP缓存中还有多少剩余空间，发送端必须保证发送的数据不超过这个剩余空间，这个窗口是接收端用来进行流量限制的。另一个窗口是发送端的拥塞窗口(Congestion window)，由发送端维护这个值，在协议头部信息中没有，所以拥塞窗口可以看作是发送端用来进行流量控制的窗口。</p>
-<h2 id="BIC算法（Binary-Increase-Congestion）"><a href="#BIC算法（Binary-Increase-Congestion）" class="headerlink" title="BIC算法（Binary Increase Congestion）"></a>BIC算法（Binary Increase Congestion）</h2><blockquote>
-<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/dog250/article/details/53013410">https://blog.csdn.net/dog250/article/details/53013410</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zk3326312/article/details/91375314">https://blog.csdn.net/zk3326312/article/details/91375314</a></p>
-</blockquote>
-<p>传统的TCP算法，例如TCP-Reno等在<strong>长肥网络</strong>下不能充分利用网络带宽，原因在于在进入拥塞避免阶段后，它们的拥塞窗口每经过一个RTT才加1，拥塞窗口的增长速度太慢，当碰上高带宽环境时，可能需要经历很多个RTT，拥塞窗口才能接近于一个BDP。如果数据流很短，可能拥塞窗口还没增长到一个BDP，数据流就已经结束了，这种情况的带宽利用率就会非常低。</p>
-<p>BIC算法通过二分查找方法来设置拥塞窗口，现在假设“窗口最大值”代表“能将线路满载但不丢包”，则有以下的事实：</p>
-<ol>
-<li><p>假设发生丢包时拥塞窗口的大小是W1，那么若要保持线路满载却不丢包，实际的窗口最大值应该在W1以下；</p>
-</li>
-<li><p>如果检测到发生丢包，并且已经将窗口乘性减到了W2，那么实际的窗口最大值应该在W2以上。</p>
-</li>
-</ol>
-<p>因此，在TCP快速恢复阶段后，便开始在W2~W1这个区间内进行二分搜索，寻找窗口的实际最大值。定义W1为Wmax，定义W2为Wmin，发送方每收到一个ACK的时候，便将窗口设置到Wmax和Wmin的中点，一直持续到接近Wmax。也就是说，发送方的拥塞窗口的增长是和RTT有关，如果画一个坐标轴，竖轴代表发送方的拥塞窗口大小，则横轴则以RTT为一个时间单位，而非以绝对时间为单位。</p>
-<p>下图是经典的BIC算法的增长曲线，竖轴代表拥塞窗口大小，横轴可以理解为以RTT为一个时间单位。</p>
-<p>以竖着的虚线为分界线，先看虚线左边，加法增窗(Additive Increase)可以看到，二分搜索的过程，整个增窗流程趋近一个凸函数的左半边，这样带来的好处是：越接近Wmax附近，窗口的增加速度越慢，这也就意味着，在一次经历了一次丢包后，窗口会更快的接近W，并在W附近停留更多的时间。</p>
-<p>再看虚线右边的图像，这个过程被称作Max Probing，即在探测当前合适的最大窗口。BIC算法的设计者认为，当窗口值超过Wmax以后，如果还未发生丢包，则说明网络变好了，或者有部分链接让出了资源，那么我们要尽可能的去抢占他，首先我们先慢慢的尝试，然后越来越快，以保证整个网络资源的利用率，因此Max Probing被设计为虚线左边的旋转对称的模样。</p>
-<img src="/2022/04/23/TCP/BIC_1.png" class="">
-
-<p>由于BIC算法的拥塞窗口大小与RTT时间单位有关，会出现以下问题：如果两个连接RTT不同，则两者搜索到Wmax所需要的时间是不同的，进入到Max-Probe阶段所需要的时间也是不同的，因此空闲的带宽会被RTT短的那个连接先占有，不是很公平，如下图所示：</p>
-<img src="/2022/04/23/TCP/BIC_2.png" class="">
-
-<h2 id="Cubic算法"><a href="#Cubic算法" class="headerlink" title="Cubic算法"></a>Cubic算法</h2><blockquote>
-<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zk3326312/article/details/91375314">https://blog.csdn.net/zk3326312/article/details/91375314</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/dog250/article/details/53013410">https://blog.csdn.net/dog250/article/details/53013410</a></p>
-</blockquote>
-<p>CUBIC的拥塞控制窗口增长函数是一个三次函数，曲线类似于BIC，但CUBIC的拥塞窗口增长独立于RTT，也就是说曲线的纵坐标是窗口值，横坐标为绝对时间，因此能更好的保证流与流之间的公平性。</p>
-<h1 id="Loss-based可能产生的几个问题"><a href="#Loss-based可能产生的几个问题" class="headerlink" title="Loss-based可能产生的几个问题"></a>Loss-based可能产生的几个问题</h1><blockquote>
-<p>参考：<a target="_blank" rel="noopener" href="https://blog.lqs1848.top/2021/06/07/2021-06-07%20%20BBR/">https://blog.lqs1848.top/2021/06/07/2021-06-07%20%20BBR/</a></p>
-</blockquote>
-<ul>
-<li><p>丢包即拥塞。现实中网络环境很复杂，会存在错误丢包，Loss-based算法无法很好区分拥塞丢包和错误丢包。产生错误丢包可能导致TCP速率断崖式下降，这在某些网络场景中并不能充分利用带宽。</p>
-</li>
-<li><p>BufferBloat：路由器缓冲区存放数据本身代表路由器转发速率小于接收速率，实际上在一定程度上代表了网络拥塞，但TCP的发送方并不能实时感知到拥塞的发生，因此TCP一直增长发送速率再次加剧了网络拥塞。</p>
-</li>
-<li><p>低负载高延时丢包：在某些弱网环境下RTT会增加甚至出现非拥塞引起丢包（固定丢包），此时基于丢包反馈的拥塞算法的窗口会比较小，对带宽的利用率很低，吞吐量下降很明显，但是实际上网络负载并不高，所以在弱网环境下效果并不是非常理想。</p>
-</li>
-<li><p>高负载丢包：高负载无丢包情况下算法一直加窗，这样可以预测丢包事件可能很快就出现了，一旦丢包出现窗口将呈现乘性减少，由高位发送速率迅速降低会造成整个网络的瞬时抖动性，总体呈现较大的锯齿状波动。</p>
-</li>
-</ul>
-<h1 id="Buffer-bloat"><a href="#Buffer-bloat" class="headerlink" title="Buffer bloat"></a>Buffer bloat</h1><p>路由器的缓存大小也会影响到TCP的拥塞控制。</p>
-<p>如果路由器的报文缓冲区太小，将导致丢包率高，数据链路利用率低，TCP传输效率低。具体来讲，当有新报文到达的时候，如果前面一个报文正在发送，这个报文缓冲区尚未处于空闲状态，那么新的报文势必将会被丢掉。等前面一个报文发送完了，链路处于空闲状态，但是由于刚才报文已经被丢掉了，也无法利用链路空闲状态。如果被丢掉的报文是TCP报文，可能导致发送方缩小自己的发送窗口，降低了TCP连接的速率。</p>
-<p>Buffer bloat：如果路由器的缓冲区过大，大型的缓冲区使数据包不易被丢弃，数据包在队列中等待，这对Loss-based拥塞控制算法造成巨大的问题。在这种情况下，TCP 传送端并不知道拥塞的发生，仍持续增长传输速率。拥塞的信号(一个数据包丢失)需经很长时间才能反馈到发送端,此时在发送端和接收端之间缓存了大量数据，造成问题。</p>
-<p>Q：如果网络中路由器的缓冲队列开始出现排队但没有丢包，TCP发送端的滑动窗口是变大还是变小？TCP的发送速率是变大还是变小？这条链路的吞吐量是变大还是变小？</p>
-<p>A：没有丢包，滑动窗口会变大，TCP的发送速率会变大，但这条链路的吞吐量会保持不变。吞吐量：单位时间内成功传输的数据量。尽管TCP的发送速率变大，但路由器的转发速率有限，因此收到路由器转发速率的限制，吞吐量不会变大，会保持不变。除此之外，RTT也开始变大。</p>
-<h1 id="Google-BBR算法（Bottleneck-Bandwidth-and-Round-trip）"><a href="#Google-BBR算法（Bottleneck-Bandwidth-and-Round-trip）" class="headerlink" title="Google BBR算法（Bottleneck Bandwidth and Round-trip）"></a>Google BBR算法（Bottleneck Bandwidth and Round-trip）</h1><blockquote>
-<p>参考：<a target="_blank" rel="noopener" href="http://arthurchiao.art/blog/bbr-paper-zh/">http://arthurchiao.art/blog/bbr-paper-zh/</a> （论文译文）</p>
-<p><a target="_blank" rel="noopener" href="https://switch-router.gitee.io/blog/bbr1/">https://switch-router.gitee.io/blog/bbr1/</a></p>
-</blockquote>
-<p>为了解决Loss-based可能产生的问题而诞生。</p>
-<h2 id="背景-1"><a href="#背景-1" class="headerlink" title="背景"></a>背景</h2><p>在现代基础设施中， 丢包和延迟不一定表示网络发生了拥塞，因此原来的假设已经不再成立。 Google 的网络团队从这一根本问题出发，（在前人工作的基础上） 设计并实现了一个基于拥塞本身而非基于丢包或延迟的拥塞控制新算法，缩写为 BBR。BBR 通过应答包（ACK）中的 RTT 信息和已发送字节数来计算 真实传输速率（delivery rate），然后根据后者来调节客户端接下来的 发送速率（sending rate），通过保持合理的 inflight 数据量来使 传输带宽最大、传输延迟最低。另外，它完全运行在发送端，无需协议、 接收端或网络的改动，因此落地相对容易。</p>
-<h2 id="术语介绍"><a href="#术语介绍" class="headerlink" title="术语介绍"></a>术语介绍</h2><ul>
-<li><p><strong>RTprop</strong>(route-trip propagation time)：RTT时间</p>
-</li>
-<li><p><strong>BtlBw</strong>(bottleneck bandwidth)：当前链路传输速率delivery rate的上限 （带宽）</p>
-</li>
-<li><p><strong>BDP</strong>(bandwidth-delay product) &#x3D; <strong>RTprop * BtlBw （带宽时延乘积）</strong></p>
-</li>
-</ul>
-<h2 id="网络传输最优点"><a href="#网络传输最优点" class="headerlink" title="网络传输最优点"></a>网络传输最优点</h2><p>网络传输最优点：瓶颈链路被100%利用且未产生缓存队列，即**max(BtlBw)*min(RTprop)**。BBR算法的目标则是保持处于这个位。</p>
-<img src="/2022/04/23/TCP/BBR_1.png" class="">
-
-<p>如图所示，该图展示了RTT和数据传输速率（delivery rate)随着在途报文的数量（amount in flight，即已发送但暂未收到回复的报文的数量)的增大而变化的情况。</p>
-<p>该图通过两调竖着的虚线，可以分为三个区域：</p>
-<ul>
-<li><p>左侧区域：数据包不多，暂未填满整个链路管道。在这个区域内，数据传输速率会增加，但RTT不会增加。</p>
-</li>
-<li><p>中部区域：超出BDP的数据包会开始占用通信链路中的路由器buffer，产生队列，此时RTT会增加。</p>
-</li>
-<li><p>右侧区域：数据包数量继续增加，buffer被填满出现丢包现象。Loss-based拥塞控制算法开始在此起作用(如发送窗口减半再线性增加等)。</p>
-</li>
-</ul>
-<p>我们可以看出，最小RTT和最大传输速率不能同时进行测量。如果我们要测量最大传输速率，则需要把链路填满，但这有可能产生队列，rtt可能较高；如果我们要测量最小RTT，则数据包越少越好，这导致传输速率较小。</p>
-<p>因此BBR的解决办法是交替测量带宽和rtt，用一段时间内的带宽最大值和rtt最小值作为估计值。</p>
-<h2 id="BBR算法介绍"><a href="#BBR算法介绍" class="headerlink" title="BBR算法介绍"></a>BBR算法介绍</h2><h3 id="Startup-amp-Drain"><a href="#Startup-amp-Drain" class="headerlink" title="Startup &amp; Drain"></a>Startup &amp; Drain</h3><p>Startup 是 BBR 控制的流启动时的状态，为了能尽快找到链路的瓶颈带宽 BtlBw，处于 Startup 状态的流每一个 RTT 会将报文发送速率会提高一倍。指数增长的发送速率使得amount in flight快速增加，也使得传输速率快速增加，从而 BBR 计算得到的 bandwith 也快速增加，当delivery rate 不再变化，此时 BBR 就能测量到最大传输速率（即bandwidth)。当 BBR 看到测量到的 bandwidth 在连续 3 个 RTT内不再显著增长时(增长幅度小于 25%)，变会退出 Startup 状态，进入 Drain 状态。</p>
-<img src="/2022/04/23/TCP/BBR_STARTUP.png" class="">
-
-<p>Drain 状态的目标是让amount in flight回到 BDP 的水平，如图所示，使其回到转折点。该阶段存在的意义是为了抵消掉 Startup 状态后期向网络灌入的超量报文。随后，将进入 Probe Bandwidth 状态。</p>
-<img src="/2022/04/23/TCP/BBR_DRAIN.png" class="">
-
-<h3 id="Probe-Bandwidth-状态"><a href="#Probe-Bandwidth-状态" class="headerlink" title="Probe Bandwidth 状态"></a>Probe Bandwidth 状态</h3><p>Probe Bandwidth 是四个状态中唯一的稳态，也是持续时间最长的状态。在此状态下，BBR 会不断的去探测(或者说是压榨)带宽。</p>
-<p>BBR 定义了一个gain cycling的概念，以此控制报文发送速度。具体来说，一个 cycle 包含 8 个阶段，每个阶段的持续时间为 1 个 min RTT。8 个阶段的增益系数分别为：1.25、0.75、1、1、1、1、1、1。当处于增益系数值为 1.25 的阶段时，意味着发送速率是当前计算值的 1.25 倍，此时 BBR 发送速率也会变成正常情况下的 1.25 倍(踩油门)。而当处于增益系数值为 0.75 的阶段时，相应的发送速率是正常情况的 0.75 倍(踩刹车)。而增益系数值为 1 时，发送速率就是正常值(巡航)。</p>
-<p>BBR 一脚油门一脚刹车的组合保证了当链路带宽不变时，这条流不会向链路灌入超量的报文。而 6&#x2F;8 时间段里的增益系数值为 1 又使得大部分时候，发送报文的速率是稳定的。</p>
-<img src="/2022/04/23/TCP/BBR_PROBE_BW.png" class="">
-
-<h3 id="Probe-RTT-状态"><a href="#Probe-RTT-状态" class="headerlink" title="Probe RTT 状态"></a>Probe RTT 状态</h3><p>Probe RTT 状态的目的是为了探测链路的固有往返时延(RTprop)，如果 min-RTT 在 10s 内没有刷新，则无论目前BBR处于哪个状态，BBR 都会强制将状态切换到 Probe RTT。进入 Probe RTT 状态后，BBR 会将拥塞窗口限制到一个非常小的值，并持续至少 200ms, 目的是保证这条流不会引起中间设备上的报文堆积。</p>
-<img src="/2022/04/23/TCP/BBR_PROBE_RTT.png" class="">
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/04/23/TCP/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
