@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>复方汤剂</title>
+  
+  
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2022-05-15T14:27:43.740Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>Ran</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HTTP</title>
+    <link href="http://example.com/2022/05/13/HTTP/"/>
+    <id>http://example.com/2022/05/13/HTTP/</id>
+    <published>2022-05-13T11:23:49.000Z</published>
+    <updated>2022-05-15T14:27:43.740Z</updated>
+    
+    <content type="html"><![CDATA[<p>TODO</p><span id="more"></span><h1 id="HTTP简介"><a href="#HTTP简介" class="headerlink" title="HTTP简介"></a>HTTP简介</h1><h1 id="请求格式以及内容"><a href="#请求格式以及内容" class="headerlink" title="请求格式以及内容"></a>请求格式以及内容</h1><h1 id="返回格式以及内容"><a href="#返回格式以及内容" class="headerlink" title="返回格式以及内容"></a>返回格式以及内容</h1><h1 id="HTTPS和HTTP的区别"><a href="#HTTPS和HTTP的区别" class="headerlink" title="HTTPS和HTTP的区别"></a>HTTPS和HTTP的区别</h1><h1 id="HTTP相关的网络攻击"><a href="#HTTP相关的网络攻击" class="headerlink" title="HTTP相关的网络攻击"></a>HTTP相关的网络攻击</h1>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;TODO&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计算机网络" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MVP架构模式的优点</title>
+    <link href="http://example.com/2022/05/08/MVP%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%82%B9/"/>
+    <id>http://example.com/2022/05/08/MVP%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%82%B9/</id>
+    <published>2022-05-08T04:02:48.000Z</published>
+    <updated>2022-05-15T14:28:02.104Z</updated>
+    
+    <content type="html"><![CDATA[<p>TODO</p><span id="more"></span>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;TODO&lt;/p&gt;</summary>
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>设计模式</title>
+    <link href="http://example.com/2022/05/08/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://example.com/2022/05/08/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</id>
+    <published>2022-05-08T03:47:38.000Z</published>
+    <updated>2022-05-15T14:28:28.959Z</updated>
+    
+    <content type="html"><![CDATA[<p>TODO</p><span id="more"></span>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;TODO&lt;/p&gt;</summary>
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>输入url后发生了什么</title>
+    <link href="http://example.com/2022/05/04/what-happens-after-entering-the-url/"/>
+    <id>http://example.com/2022/05/04/what-happens-after-entering-the-url/</id>
+    <published>2022-05-04T15:06:06.000Z</published>
+    <updated>2022-05-15T14:28:14.405Z</updated>
+    
+    <content type="html"><![CDATA[<p>TODO</p><span id="more"></span><h1 id="输入url后发生了什么"><a href="#输入url后发生了什么" class="headerlink" title="输入url后发生了什么"></a>输入url后发生了什么</h1>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;TODO&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计算机网络" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>关于TCP协议的一些小疑惑</title>
+    <link href="http://example.com/2022/05/04/TCPConfusion/"/>
+    <id>http://example.com/2022/05/04/TCPConfusion/</id>
+    <published>2022-05-04T12:26:53.000Z</published>
+    <updated>2022-05-15T14:24:24.654Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="关于TCP协议的一些疑惑"><a href="#关于TCP协议的一些疑惑" class="headerlink" title="关于TCP协议的一些疑惑"></a>关于TCP协议的一些疑惑</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文需要搞清楚的问题有：</p><ol><li>为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？</li><li>为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？</li><li>SYN攻击是什么？如何避免？</li><li>IP层的MTU是什么？TCP为什么需要MSS？</li><li>如果已经建立了连接，客户端突然故障了怎么办？</li><li>重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？</li><li>TCP 是如何解决窗口关闭时，潜在的死锁现象呢？</li><li>流量控制中的糊涂窗口综合征是什么？如何避免？</li></ol><span id="more"></span><h2 id="TCP基本概况"><a href="#TCP基本概况" class="headerlink" title="TCP基本概况"></a>TCP基本概况</h2><p>TCP状态变迁图如图所示（摘自《TCP&#x2F;IP详解》）</p><p>在建立连接的三次握手过程中，服务端和客户端的状态变迁分别为：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">客户端closed--发syn--&gt;SYN_SENT--收syn, ack,发ack--&gt;客户端established</span><br><span class="line">服务端closed--&gt;listen--收到syn, 发syn, ack--&gt;SYN收到--收ack--&gt;服务端established</span><br></pre></td></tr></table></figure><p>在断开连接的四次分手过程中，服务端和客户端的状态迁移分别为：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">服务端established--收fin, 发ack--&gt;close_wait --应用进程关闭, 发fin--&gt; last_ack --收ack--&gt;服务端closed</span><br><span class="line">客户端established--应用进程关闭,发fin--&gt;fin_wait_1--收ack--&gt;fin_wait_2--收fin,发ack--&gt;time_wait,2MSL--&gt;closed</span><br></pre></td></tr></table></figure><h2 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h2><blockquote><p>参考：<a href="https://www.cnblogs.com/traditional/p/12936575.html">https://www.cnblogs.com/traditional/p/12936575.html</a></p></blockquote><h3 id="为何TCP协议握手要设计成三次？"><a href="#为何TCP协议握手要设计成三次？" class="headerlink" title="为何TCP协议握手要设计成三次？"></a>为何TCP协议握手要设计成三次？</h3><p>首先，两个实体建立连接，至少需要两个步骤。举例来说，实体A要和实体B建立良好的通信关系，则第一步A要主动告诉B它想通信了，第二步则是B回复A它可以建立通信。但这个例子是建立在实体A和实体B的接受能力和发送能力良好且两者通信顺畅的情况下。</p><p>如果TCP协议握手只设计成两次的话，会产生以下的问题：</p><ol><li><strong>防止旧的初始化报文造成混乱</strong>。举例来说，假设现在客户端给服务端发送了一个SYN报文，记作旧报文，但由于网络或者种种其它问题，在规定时间内客户端没有收到来自服务端的报文，因此客户端又发送了一个SYN报文，记作新报文。此时服务端先收到了旧报文，给客户端回了一个SYN+ACK报文，称为旧回复报文，此后服务端又收到了新报文，给客户端又回了个新回复报文。假设客户端先收到新回复报文，与B建立了连接；此后收到旧回复报文，并将之丢弃。服务端将无法感知客户端丢弃了旧回复报文，可能一直处于等待数据的状态，浪费资源。</li><li>双方初始化序列号未达成共识。还是上面的例子，假设服务端先发的新报文的回复a，再发的旧报文的回复b，此时服务端期待拿到b中序列号的ack；但客户端会丢弃回复b，后续传数据时会用a中携带的服务端的序列号，此时就出现了双方没有就服务端的初始序列号达成共识，会造成通信混乱。</li></ol><p>当TCP协议握手三次的时候，如果客户端收到旧回复报文，则会给服务端发送RST包告诉服务端异常终止连接。</p><h3 id="为何TCP协议挥手需要四次？"><a href="#为何TCP协议挥手需要四次？" class="headerlink" title="为何TCP协议挥手需要四次？"></a>为何TCP协议挥手需要四次？</h3><ul><li>客户端发送fin只是为了告诉服务端自己已经没有数据要发送了，客户端仍然可以接收数据。此时服务端可能还有数据要处理或者还有数据要发送给客户端，因此服务端返回ack来表明自己已经知道客户端没数据发了。</li><li>等到服务端处理完后，发送fin告诉客户端自己也没有需要发送的数据了，可以正式关闭连接，客户端需要回复ack给服务端来表明自己已经知道服务端没有需要发送的数据了。</li></ul><p>可以看到，服务端的ack和fin是分开发的，因此挥手需要四次。</p><h3 id="为什么需要TIME-WAIT状态？为何TIME-WAIT等待时间是2MSL？TIME-WAIT过多的危害？"><a href="#为什么需要TIME-WAIT状态？为何TIME-WAIT等待时间是2MSL？TIME-WAIT过多的危害？" class="headerlink" title="为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？"></a>为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？</h3><blockquote><p> 参考《TCP&#x2F;IP详解》18.6.1 2MSL等待状态</p></blockquote><h4 id="需要TIME-WAIT的原因"><a href="#需要TIME-WAIT的原因" class="headerlink" title="需要TIME_WAIT的原因"></a>需要TIME_WAIT的原因</h4><p>主动关闭的一方需要TIME_WAIT状态的原因：</p><ul><li>保证最后向被动关闭的一方发送的ack能被对方接收到，从而能够正确的关闭连接。</li><li>防止旧报文影响新连接。假设没有TIME_WAIT状态，双方都进入到了closed状态。此后socket被复用，双方建立了新连接，可能会接收到这个旧报文，导致数据错乱。</li></ul><p>假设客户端为主动关闭的一方。如果没有TIME_WAIT，此时客户端进入到了closed状态，假设客户端发送的最后一个ack丢失，则服务端会一直处于last_ack的状态，没有正常关闭。</p><p>正是因为有了TIME_WAIT状态，假设客户端最后一个ack丢失，服务端在发送fin后一段时间没有收到ack，会重新发送fin数据包给客户端，客户端在TIME_WAIT阶段收到FIN包后，就会重新发ack给服务端。因此服务端可以通过这种机制正常关闭。</p><h4 id="TIME-WAIT为2MSL的原因"><a href="#TIME-WAIT为2MSL的原因" class="headerlink" title="TIME_WAIT为2MSL的原因"></a>TIME_WAIT为2MSL的原因</h4><p>MSL，报文段最大生存时间（Maximum Segment Lifetime），是任何报文段在被丢弃之前在网络内存活的最长时间。</p><p>TIME_WAIT的等待时间设置为2MSL是为了保证服务端能够收到最后的ack，客户端发送ack到ack消亡需要MSL时间，而收到服务端重传的fin又需要MSL时间，因此就是2MSL时间。</p><p>具体而言就是，从服务端第一次发送fin包的时候就开始设置超时重传定时器。当客户端发送的ack丢失时服务端的定时器必然已经到期，服务端第二次发送fin包。客户端从发ack到ack丢包经历的时间&lt;&#x3D;MSL，从服务端再次发fin包到客户端收到fin包经历的时间&lt;&#x3D;MSL，因此保证客户端等待2MSL的时间内会收到服务端重发的fin包。当客户端收到fin包后，会再次重启2MSL计时器。</p><p>问题：如果服务端重发的fin包也丢包了怎么办？</p><p>答：连续两次丢包的概率太小了，因此忽略这种情况比解决这种情况更有性价比。</p><h4 id="TIME-WAIT过多的危害"><a href="#TIME-WAIT过多的危害" class="headerlink" title="TIME_WAIT过多的危害"></a>TIME_WAIT过多的危害</h4><p>如果服务端有TCP连接处于TIME_WAIT状态，则说明是服务端主动断开的。倘若服务端TIME_WAIT状态过多，则有以下问题：</p><ul><li>对端口资源占用。当处于TIME_WAIT状态时，这个端口就不能被其它新连接使用了，而服务端端口资源时有限的。</li><li>占用内存资源。</li></ul><h3 id="SYN攻击是什么？如何避免？"><a href="#SYN攻击是什么？如何避免？" class="headerlink" title="SYN攻击是什么？如何避免？"></a>SYN攻击是什么？如何避免？</h3><p>假设攻击者短时间伪造不同 IP 地址的 SYN 报文，服务端每接收到一个 SYN 报文，就进入SYN_RCVD 状态，但服务端发送出去的 ACK + SYN 报文，无法得到未知 IP 主机的 ACK 应答，久而久之就会占满服务端的 SYN 接收队列（半连接队列），使得服务器不能为正常用户服务。</p><h4 id="正常流程"><a href="#正常流程" class="headerlink" title="正常流程"></a>正常流程</h4><ol><li><p>当服务端接收到客户端的 SYN 报文时，会将其加入到内核的「SYN 队列」；</p></li><li><p>接着发送 SYN + ACK 给客户端，等待客户端回应 ACK 报文；</p></li><li><p>服务端接收到 ACK 报文后，将连接从「SYN 队列」移除并放入到「Accept 队列」；</p></li><li><p>应用通过调用 socket 接口 accpet()，从「Accept 队列」取出连接；</p></li></ol><h4 id="SYN攻击时"><a href="#SYN攻击时" class="headerlink" title="SYN攻击时"></a>SYN攻击时</h4><p>第2、3步被阻塞，SYN队列被填满，队列中没有元素被取出，Accept 队列被应用消耗完后一直为空，应用程序取不到新连接。</p><h4 id="避免方式"><a href="#避免方式" class="headerlink" title="避免方式"></a>避免方式</h4><p>打开<strong>tcp_syncookies</strong>，达到以下效果：</p><ol><li><p>当 「SYN 队列」满之后，后续服务器收到 SYN 包，不进入「SYN 队列」，而是计算出一个 cookie 值，再以 SYN + ACK 中的「序列号」的形式返回客户端；</p></li><li><p>服务端接收到客户端的应答报文时，服务器会检查这个 ACK 包的合法性。如果合法，直接放入到「Accept 队列」；</p></li><li><p>最后应用通过调用 socket 接口 accpet()，从「 Accept 队列」取出连接</p></li></ol><h3 id="如果已经建立了连接，客户端突然故障了怎么办？"><a href="#如果已经建立了连接，客户端突然故障了怎么办？" class="headerlink" title="如果已经建立了连接，客户端突然故障了怎么办？"></a>如果已经建立了连接，客户端突然故障了怎么办？</h3><blockquote><p>参考《TCP&#x2F;IP详解》第23章 保活定时器</p></blockquote><p>保活功能主要是为服务器应用程序提供的。如果一个客户端突然断电了，那就会在服务端留下一个半开放的连接，服务端一直会等待来自客户端的数据。保活功能能让服务端检测这种半开放的连接。</p><p>如果某个特定的连接在2小时内没有任何动作，那么服务端会向客户端发送一个探测报文段。可能会出现以下几种情况：</p><ol><li>客户主机正常运行，TCP响应正常。服务端知道客户主机正常后，会将保活定时器复位。</li><li>客户主机已经崩溃，处于关闭状态或者正在重启；或者客户主机正常运行，但不可达。此时客户TCP没有响应。服务端没收到响应，就会每隔75s发送一个探测，共发10个探测。如果服务端发送的探测一个响应都没都收到，服务端就会认为客户主机已经关闭了，就会终止连接。</li><li>客户主机已经重新启动了。这时候客户主机会回复一个RST的报文，让服务端终止连接。</li></ol><h3 id="IP层的MTU是什么？TCP为什么需要MSS？"><a href="#IP层的MTU是什么？TCP为什么需要MSS？" class="headerlink" title="IP层的MTU是什么？TCP为什么需要MSS？"></a>IP层的MTU是什么？TCP为什么需要MSS？</h3><p>MTU：最大传输单元（Maximum transmission unit）。一般网络接口都会定义一个MTU，如果IP包的尺寸&lt;&#x3D;MTU，则这个数据包会原封不动从这个网络接口发送，否则需要分段。</p><p>MSS：最大报文长度（Maximum Segment Size）。</p><p>当TCP发送一个SYN时，将MSS值设置为外出接口的MTU长度减去固定的IP首部和TCP首部长度。MSS让主机限制另一端发送数据报的长度，如图所示，最终sun和slip不会发送超过256字节数据的报文段。较小MTU连接到另一个网络上的主机因此避免了分段。（参考《TCP&#x2F;IP详解》18.4 最大报文段长度）。</p><p>不过这个方法不能完全避免分段，因为存在以下的情况：假设两端主机都连接到以太网上，都采用536字节的MSS，但中间网络采用的MTU为296字节，这样也会出现分段。为了解决这个问题，需要使用路径MTU发现机制。（参考《TCP&#x2F;IP详解》24.2 路径MTU发现）</p><p>路径MTU发现：IP首部有个DF（Don’t Fragment）标志位，表示不要分片。如果IP包的长度超过了某个路由器的MTU，但设置了DF标志位，则路由器丢弃该数据包，并产生一个“不能分片”的ICMP错误发送给源主机，告诉源主机其MTU时多少。</p><h3 id="重传机制中的SACK（Selective-Acknowledgment-选择性确认）是什么？Duplicate-SACK是什么？"><a href="#重传机制中的SACK（Selective-Acknowledgment-选择性确认）是什么？Duplicate-SACK是什么？" class="headerlink" title="重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？"></a>重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？</h3><blockquote><p><a href="https://blog.csdn.net/wdscq1234/article/details/52503315">https://blog.csdn.net/wdscq1234/article/details/52503315</a></p></blockquote><h4 id="SACK"><a href="#SACK" class="headerlink" title="SACK"></a>SACK</h4><p>当我们在收到一个失序的报文段时，TCP会立刻产生一个重复的ACK。但对方不知道一个重复的ack时由于报文丢失引起的，还是由于乱序引起的。对方采取的策略是，当它连续收到3个及以上重复ack的时候，就认为报文段丢失了，此时无需等待超时定时器到点，就立刻重传丢失的报文段。</p><p>问题在于，此时重传这一个报文，还是重传这个报文以及以后的所有报文？例如，客户端发了seg1<del>seg10，服务端返回了三个ack seg2，此时客户端是只重传seg2，还是seg2</del>seg10都要重传呢？</p><ul><li>倘若只重传seg2，那假如seg2~seg7都丢失了，客户端需要一个个等待超时才重发，浪费了时间。</li><li>倘若seg2~seg10都重传了，那假如只有seg2丢失了，多重传了这几个包，浪费了流量。</li></ul><p>SACK是TCP的一个选项（RFC 2018），它允许TCP单独确认非连续的片段，用来告知真正丢失的包。双方设备需要同时支持SACK才可以使用这个功能。SACK选项中包含一系列没有确认的数据的序列范围。</p><h4 id="D-SACK"><a href="#D-SACK" class="headerlink" title="D-SACK"></a>D-SACK</h4><blockquote><p><a href="https://blog.csdn.net/u014023993/article/details/85041321">https://blog.csdn.net/u014023993/article/details/85041321</a></p></blockquote><p>RFC2883对SACK进行了扩展，称为D-SACK：使得扩展后的SACK具有通知发送端哪些数据被重复接收了。</p><p>D-SACK使用了SACK的第一个段来做标志，<strong>如何判断D-SACK</strong>：</p><ul><li>如果SACK的第一个段的范围被ACK所覆盖，那么就是D-SACK。如图所示，说明3000-3499被重复接收了，4000以前的数据也收到了。</li></ul><p><img src="https://img-blog.csdnimg.cn/20190127102442394.jpg" alt="img"></p><ul><li><p>如果SACK的第一个段的范围被SACK的第二个段覆盖，那么就是D-SACK。如图所示，[4000，SACK&#x3D;3000-3500, 4500-5000]说明4000前的数据已收到，3000-3500的数据重复收到，4000-4499的包丢失，4500-5000的包收到。</p><p><img src="https://img-blog.csdnimg.cn/2019012710245146.jpg" alt="img"></p></li></ul><p>上图中的[4000，SACK&#x3D;4500-5000]是普通的SACK，表明4000以前的数据已经收到，4500-5000的数据包已经收到但还未确认，即未收到4000-4499。</p><h3 id="TCP-是如何解决窗口关闭时，潜在的死锁现象呢？"><a href="#TCP-是如何解决窗口关闭时，潜在的死锁现象呢？" class="headerlink" title="TCP 是如何解决窗口关闭时，潜在的死锁现象呢？"></a>TCP 是如何解决窗口关闭时，潜在的死锁现象呢？</h3><blockquote><p>参考《TCP&#x2F;IP详解》第22章 TCP的坚持定时器</p></blockquote><p>接收方通过通告窗口来进行流量控制。如果窗口大小为 0 时，就会阻止发送方给接收方传递数据，直到窗口变为非 0 为止，这就是窗口关闭。当发送方窗口关闭后，接收方处理完缓冲区的数据，会发送一个ACK告诉发送方新窗口值，万一这个ACK丢掉了，那就会出现死锁，即：发送方等待ack来告知它可以继续发数据，而接收方等待接收数据。</p><p>为了防止这种死锁的情况发生，发送方使用坚持定时器（persist timer）来周期性向接收方查询窗口是否增大，这个用来查询的报文段叫做窗口探查（window probe）。</p><h3 id="流量控制中的糊涂窗口综合征是什么？如何避免？"><a href="#流量控制中的糊涂窗口综合征是什么？如何避免？" class="headerlink" title="流量控制中的糊涂窗口综合征是什么？如何避免？"></a>流量控制中的糊涂窗口综合征是什么？如何避免？</h3><h3 id="多路IO复用？"><a href="#多路IO复用？" class="headerlink" title="多路IO复用？"></a>多路IO复用？</h3><h3 id="如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？"><a href="#如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？" class="headerlink" title="如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？"></a>如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？</h3>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;关于TCP协议的一些疑惑&quot;&gt;&lt;a href=&quot;#关于TCP协议的一些疑惑&quot; class=&quot;headerlink&quot; title=&quot;关于TCP协议的一些疑惑&quot;&gt;&lt;/a&gt;关于TCP协议的一些疑惑&lt;/h1&gt;&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文需要搞清楚的问题有：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？&lt;/li&gt;
+&lt;li&gt;为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？&lt;/li&gt;
+&lt;li&gt;SYN攻击是什么？如何避免？&lt;/li&gt;
+&lt;li&gt;IP层的MTU是什么？TCP为什么需要MSS？&lt;/li&gt;
+&lt;li&gt;如果已经建立了连接，客户端突然故障了怎么办？&lt;/li&gt;
+&lt;li&gt;重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？&lt;/li&gt;
+&lt;li&gt;TCP 是如何解决窗口关闭时，潜在的死锁现象呢？&lt;/li&gt;
+&lt;li&gt;流量控制中的糊涂窗口综合征是什么？如何避免？&lt;/li&gt;
+&lt;/ol&gt;</summary>
+    
+    
+    
+    <category term="计算机网络" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>TCP协议-从传统拥塞控制算法讲起</title>
+    <link href="http://example.com/2022/04/23/TCP/"/>
+    <id>http://example.com/2022/04/23/TCP/</id>
+    <published>2022-04-23T13:31:21.000Z</published>
+    <updated>2022-04-24T05:14:59.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>发生拥塞控制的原因：资源(带宽、交换节点的缓存、处理机)的需求&gt;可用资源。拥塞控制就是为了防止过多的数据注入到网络中，这样可以使网络中的路由器或者链路不至于过载。</p><p>本篇学习笔记需要理清的问题有以下几点：</p><ul><li><p>TCP RENO算法（教科书算法）是如何控制网络拥塞的？有什么局限性？</p></li><li><p>为了解决这个局限性，TCP的拥塞算法是如何改进的？</p></li><li><p>Google提出的BBR算法和TCP广泛使用的拥塞算法相比，有何不同？有何优点？</p></li></ul><span id="more"></span><h1 id="带宽时延乘积（bandwidth-delay-product）"><a href="#带宽时延乘积（bandwidth-delay-product）" class="headerlink" title="带宽时延乘积（bandwidth-delay product）"></a>带宽时延乘积（bandwidth-delay product）</h1><p>首先先介绍一下带宽时延乘积的概念。</p><blockquote><p>参考：<a href="https://blog.csdn.net/hackerwin7/article/details/21969307">https://blog.csdn.net/hackerwin7/article/details/21969307</a></p></blockquote><ul><li><p>带宽：指单位时间内从发送端到接收端所能通过的“最高数据率”，是一种硬件限制。TCP发送端和接收端的数据传输数率不可能超过两点间的带宽限制。类比于一条马路上的车道，车道数越多，每秒能并行前进的车辆也就越多；带宽也是如此，带宽越大，每秒能发送的数据量也就越大。</p></li><li><p>RTT（Round Trip Time）：表示从发送端到接收端的一去一回需要的时间，TCP在数据传输过程中会对RTT进行采样（即对发送数据到其收到ACK的时间差进行测量，并根据测量值更新RTT值），TCP根据得到的RTT值更新RTO（Retransmission TimeOut）值，即重传间隔。发送端对每个发出的数据包进行计时，如果在RTO时间内没有收到所发出的数据包的对应ACK，则认为数据包丢失，将重传数据。一般RTO值都比采样得到的RTT值要大。</p></li><li><p>带宽时延乘积：即带宽<em>RTT，该值等于发送端到接收端单向通道的数据容积的两倍，即放满单向网络通道的数据量为带宽</em>RTT&#x2F;2。</p></li></ul><p>设滑动窗口大小为W， 发送端和接收端的带宽为B， RTT为Tr。TCP发送数据时受滑动窗口的限制，当TCP将滑动窗口中的数据都发出后，在收到第一个ACK之前，可发送的滑动窗口大小是0，不能再发送数据了，必须等待ACK包使滑动窗口移动。在理想情况下，数据发出后的RTT时间后ACK包到达发送端，现在假设TCP在一个RTT时间内能发出的最大数据量为W，在不考虑带宽限制的情况下，TCP发包的最大速率是 V &#x3D; W&#x2F;Tr。</p><p>当V&lt;B时，带宽不构成瓶颈，此时速率的限制主要来源于窗口大小限制；当V&gt;B时，速率限制来源于带宽限制。</p><p>V与B的关系可以替换成W、Tr与B的关系，将 V &#x3D; W&#x2F;Tr带入可以得到，当W &lt;&#x3D; B<em>Tr，带宽不构成瓶颈；当W &gt; B</em>Tr时，带宽构成瓶颈。</p><p>B<em>Tr就是带宽时延乘积。取W为TCP能支持窗口的最大值Wmax，当Wmax &lt;&#x3D; B</em>Tr时，此时发送和接收端之间的通道就是所谓的<strong>长肥网络</strong>（LFN，long fat network），即带宽时延乘积较大的通道。在我们平时生活中使用的宽带网络，因为带宽都比较小，从而B*Tr也比较小，再加上网络情况比较复杂，拥塞情况比较常见，所以这些网络环境下，TCP速率的主要限制因素在于带宽，丢包率等。</p><p>在W&lt;B*Tr时，影响TCP发送数据速率的最直接的因素是滑动窗口的大小，TCP的拥塞控制策略是通过控制窗口大小来控制速率，而慢启动，拥塞避免这些算法实际上就是控制窗口增长方式的算法，也就是控制窗口增加的加速度大小。</p><h1 id="基于丢包的拥塞控制算法（Loss-based）"><a href="#基于丢包的拥塞控制算法（Loss-based）" class="headerlink" title="基于丢包的拥塞控制算法（Loss-based）"></a>基于丢包的拥塞控制算法（Loss-based）</h1><h2 id="RENO算法（教科书上的算法）"><a href="#RENO算法（教科书上的算法）" class="headerlink" title="RENO算法（教科书上的算法）"></a>RENO算法（教科书上的算法）</h2><p>TCP协议传统的拥塞控制算法为：慢开始、拥塞避免、快重传、快启动。</p><ul><li><p><strong>慢启动</strong>：主机开始发送数据的时候，如果立即将大量的数据注入到网络中，可能会出现网络的拥塞。慢启动算法就是在主机刚开始发送数据报的时候先探测一下网络的状况，如果网络状况良好，发送方每发送一次报文段都能正确接收到报文段ACK，就增加拥塞窗口（congestion window，简称cwnd）的大小，由1-&gt;2-&gt;4-&gt;8（以报文段长度为单位）这样指数级增加cwnd大小。</p></li><li><p><strong>拥塞避免</strong>：由于cwnd是指数级增长，为了防止cwnd增加过快而导致网络拥塞，需要设置一个慢启动的拥塞窗口阈值ssthresh。当cwnd &lt; ssthresh，使用慢启动算法；当cwnd &gt; ssthresh，使用拥塞控制算法，停用慢启动算法；当cwnd &#x3D; ssthresh，这两个算法都可以。拥塞控制算法具体为：每经历过一次往返时间就使cwnd增加1，使cwnd缓慢增长。</p></li><li><p><strong>快重传</strong>：接收方收到一个失序的报文段后就立刻发出理应发送的ACK报文。如果发送方连续收到三个重复的ACK，则发送方立刻重传相关报文段，而不必等待重传计时器到期。</p></li><li><p><strong>快恢复</strong>：当发送发连续接收到三个确认时，就把慢启动的阈值（ssthresh）减为当前cwnd的一半，然后将cwnd设置为ssthresh，继续拥塞避免算法。</p></li><li><p><strong>AIMD（additive-increase&#x2F;multiplicative-decrease）原则</strong>：加法增加，乘法减小。当网络频发出现超时情况时，为了减少注入到网络中的分组数，ssthresh就下降的很快；而加法增大是指执行拥塞避免算法后，拥塞窗口缓慢增大，以防止网络过早出现拥塞。</p></li></ul><p>经典的示意图如下图所示：</p><img src="/2022/04/23/TCP/RENO.png" class=""><p>注意：滑动窗口的大小实际上是由两个窗口共同决定的，一个是接收端的通告窗口，另一个是拥塞窗口，滑动窗口的大小就是通告窗口和拥塞窗口的较小值。通告窗口的窗口值在TCP协议头部信息中有，会随着数据的ACK包发送给发送端，这个值表示的是在接收端的TCP缓存中还有多少剩余空间，发送端必须保证发送的数据不超过这个剩余空间，这个窗口是接收端用来进行流量限制的。另一个窗口是发送端的拥塞窗口(Congestion window)，由发送端维护这个值，在协议头部信息中没有，所以拥塞窗口可以看作是发送端用来进行流量控制的窗口。</p><h2 id="BIC算法（Binary-Increase-Congestion）"><a href="#BIC算法（Binary-Increase-Congestion）" class="headerlink" title="BIC算法（Binary Increase Congestion）"></a>BIC算法（Binary Increase Congestion）</h2><blockquote><p>参考：<a href="https://blog.csdn.net/dog250/article/details/53013410">https://blog.csdn.net/dog250/article/details/53013410</a></p><p><a href="https://blog.csdn.net/zk3326312/article/details/91375314">https://blog.csdn.net/zk3326312/article/details/91375314</a></p></blockquote><p>传统的TCP算法，例如TCP-Reno等在<strong>长肥网络</strong>下不能充分利用网络带宽，原因在于在进入拥塞避免阶段后，它们的拥塞窗口每经过一个RTT才加1，拥塞窗口的增长速度太慢，当碰上高带宽环境时，可能需要经历很多个RTT，拥塞窗口才能接近于一个BDP。如果数据流很短，可能拥塞窗口还没增长到一个BDP，数据流就已经结束了，这种情况的带宽利用率就会非常低。</p><p>BIC算法通过二分查找方法来设置拥塞窗口，现在假设“窗口最大值”代表“能将线路满载但不丢包”，则有以下的事实：</p><ol><li><p>假设发生丢包时拥塞窗口的大小是W1，那么若要保持线路满载却不丢包，实际的窗口最大值应该在W1以下；</p></li><li><p>如果检测到发生丢包，并且已经将窗口乘性减到了W2，那么实际的窗口最大值应该在W2以上。</p></li></ol><p>因此，在TCP快速恢复阶段后，便开始在W2~W1这个区间内进行二分搜索，寻找窗口的实际最大值。定义W1为Wmax，定义W2为Wmin，发送方每收到一个ACK的时候，便将窗口设置到Wmax和Wmin的中点，一直持续到接近Wmax。也就是说，发送方的拥塞窗口的增长是和RTT有关，如果画一个坐标轴，竖轴代表发送方的拥塞窗口大小，则横轴则以RTT为一个时间单位，而非以绝对时间为单位。</p><p>下图是经典的BIC算法的增长曲线，竖轴代表拥塞窗口大小，横轴可以理解为以RTT为一个时间单位。</p><p>以竖着的虚线为分界线，先看虚线左边，加法增窗(Additive Increase)可以看到，二分搜索的过程，整个增窗流程趋近一个凸函数的左半边，这样带来的好处是：越接近Wmax附近，窗口的增加速度越慢，这也就意味着，在一次经历了一次丢包后，窗口会更快的接近W，并在W附近停留更多的时间。</p><p>再看虚线右边的图像，这个过程被称作Max Probing，即在探测当前合适的最大窗口。BIC算法的设计者认为，当窗口值超过Wmax以后，如果还未发生丢包，则说明网络变好了，或者有部分链接让出了资源，那么我们要尽可能的去抢占他，首先我们先慢慢的尝试，然后越来越快，以保证整个网络资源的利用率，因此Max Probing被设计为虚线左边的旋转对称的模样。</p><img src="/2022/04/23/TCP/BIC_1.png" class=""><p>由于BIC算法的拥塞窗口大小与RTT时间单位有关，会出现以下问题：如果两个连接RTT不同，则两者搜索到Wmax所需要的时间是不同的，进入到Max-Probe阶段所需要的时间也是不同的，因此空闲的带宽会被RTT短的那个连接先占有，不是很公平，如下图所示：</p><img src="/2022/04/23/TCP/BIC_2.png" class=""><h2 id="Cubic算法"><a href="#Cubic算法" class="headerlink" title="Cubic算法"></a>Cubic算法</h2><blockquote><p>参考：<a href="https://blog.csdn.net/zk3326312/article/details/91375314">https://blog.csdn.net/zk3326312/article/details/91375314</a></p><p><a href="https://blog.csdn.net/dog250/article/details/53013410">https://blog.csdn.net/dog250/article/details/53013410</a></p></blockquote><p>CUBIC的拥塞控制窗口增长函数是一个三次函数，曲线类似于BIC，但CUBIC的拥塞窗口增长独立于RTT，也就是说曲线的纵坐标是窗口值，横坐标为绝对时间，因此能更好的保证流与流之间的公平性。</p><h1 id="Loss-based可能产生的几个问题"><a href="#Loss-based可能产生的几个问题" class="headerlink" title="Loss-based可能产生的几个问题"></a>Loss-based可能产生的几个问题</h1><blockquote><p>参考：<a href="https://blog.lqs1848.top/2021/06/07/2021-06-07%20%20BBR/">https://blog.lqs1848.top/2021/06/07/2021-06-07%20%20BBR/</a></p></blockquote><ul><li><p>丢包即拥塞。现实中网络环境很复杂，会存在错误丢包，Loss-based算法无法很好区分拥塞丢包和错误丢包。产生错误丢包可能导致TCP速率断崖式下降，这在某些网络场景中并不能充分利用带宽。</p></li><li><p>BufferBloat：路由器缓冲区存放数据本身代表路由器转发速率小于接收速率，实际上在一定程度上代表了网络拥塞，但TCP的发送方并不能实时感知到拥塞的发生，因此TCP一直增长发送速率再次加剧了网络拥塞。</p></li><li><p>低负载高延时丢包：在某些弱网环境下RTT会增加甚至出现非拥塞引起丢包（固定丢包），此时基于丢包反馈的拥塞算法的窗口会比较小，对带宽的利用率很低，吞吐量下降很明显，但是实际上网络负载并不高，所以在弱网环境下效果并不是非常理想。</p></li><li><p>高负载丢包：高负载无丢包情况下算法一直加窗，这样可以预测丢包事件可能很快就出现了，一旦丢包出现窗口将呈现乘性减少，由高位发送速率迅速降低会造成整个网络的瞬时抖动性，总体呈现较大的锯齿状波动。</p></li></ul><h1 id="Buffer-bloat"><a href="#Buffer-bloat" class="headerlink" title="Buffer bloat"></a>Buffer bloat</h1><p>路由器的缓存大小也会影响到TCP的拥塞控制。</p><p>如果路由器的报文缓冲区太小，将导致丢包率高，数据链路利用率低，TCP传输效率低。具体来讲，当有新报文到达的时候，如果前面一个报文正在发送，这个报文缓冲区尚未处于空闲状态，那么新的报文势必将会被丢掉。等前面一个报文发送完了，链路处于空闲状态，但是由于刚才报文已经被丢掉了，也无法利用链路空闲状态。如果被丢掉的报文是TCP报文，可能导致发送方缩小自己的发送窗口，降低了TCP连接的速率。</p><p>Buffer bloat：如果路由器的缓冲区过大，大型的缓冲区使数据包不易被丢弃，数据包在队列中等待，这对Loss-based拥塞控制算法造成巨大的问题。在这种情况下，TCP 传送端并不知道拥塞的发生，仍持续增长传输速率。拥塞的信号(一个数据包丢失)需经很长时间才能反馈到发送端,此时在发送端和接收端之间缓存了大量数据，造成问题。</p><p>Q：如果网络中路由器的缓冲队列开始出现排队但没有丢包，TCP发送端的滑动窗口是变大还是变小？TCP的发送速率是变大还是变小？这条链路的吞吐量是变大还是变小？</p><p>A：没有丢包，滑动窗口会变大，TCP的发送速率会变大，但这条链路的吞吐量会保持不变。吞吐量：单位时间内成功传输的数据量。尽管TCP的发送速率变大，但路由器的转发速率有限，因此收到路由器转发速率的限制，吞吐量不会变大，会保持不变。除此之外，RTT也开始变大。</p><h1 id="Google-BBR算法（Bottleneck-Bandwidth-and-Round-trip）"><a href="#Google-BBR算法（Bottleneck-Bandwidth-and-Round-trip）" class="headerlink" title="Google BBR算法（Bottleneck Bandwidth and Round-trip）"></a>Google BBR算法（Bottleneck Bandwidth and Round-trip）</h1><blockquote><p>参考：<a href="http://arthurchiao.art/blog/bbr-paper-zh/">http://arthurchiao.art/blog/bbr-paper-zh/</a> （论文译文）</p><p><a href="https://switch-router.gitee.io/blog/bbr1/">https://switch-router.gitee.io/blog/bbr1/</a></p></blockquote><p>为了解决Loss-based可能产生的问题而诞生。</p><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在现代基础设施中， 丢包和延迟不一定表示网络发生了拥塞，因此原来的假设已经不再成立。 Google 的网络团队从这一根本问题出发，（在前人工作的基础上） 设计并实现了一个基于拥塞本身而非基于丢包或延迟的拥塞控制新算法，缩写为 BBR。BBR 通过应答包（ACK）中的 RTT 信息和已发送字节数来计算真实传输速率（delivery rate），然后根据后者来调节客户端接下来的发送速率（sending rate），通过保持合理的在途数据包数量来使使得传输速率最大、传输延迟最低。另外，它完全运行在发送端，无需协议、 接收端或网络的改动，因此落地相对容易。</p><h2 id="术语介绍"><a href="#术语介绍" class="headerlink" title="术语介绍"></a>术语介绍</h2><ul><li><p><strong>RTprop</strong>(route-trip propagation time)：RTT时间</p></li><li><p><strong>BtlBw</strong>(bottleneck bandwidth)：当前链路传输速率delivery rate的上限 （带宽）</p></li><li><p><strong>BDP</strong>(bandwidth-delay product) &#x3D; <strong>RTprop * BtlBw （带宽时延乘积）</strong></p></li></ul><h2 id="网络传输最优点"><a href="#网络传输最优点" class="headerlink" title="网络传输最优点"></a>网络传输最优点</h2><p>网络传输最优点：瓶颈链路被100%利用且未产生缓存队列，即**max(BtlBw)*min(RTprop)**。BBR算法的目标则是保持处于这个位。</p><img src="/2022/04/23/TCP/BBR_1.png" class=""><p>如图所示，该图展示了RTT和数据传输速率（delivery rate)随着在途报文的数量（amount in flight，即已发送但暂未收到回复的报文的数量)的增大而变化的情况。</p><p>该图通过两调竖着的虚线，可以分为三个区域：</p><ul><li><p>左侧区域：数据包不多，暂未填满整个链路管道。在这个区域内，数据传输速率会增加，但RTT不会增加。</p></li><li><p>中部区域：超出BDP的数据包会开始占用通信链路中的路由器buffer，产生队列，此时RTT会增加。</p></li><li><p>右侧区域：数据包数量继续增加，buffer被填满出现丢包现象。Loss-based拥塞控制算法开始在此起作用(如发送窗口减半再线性增加等)。</p></li></ul><p>我们可以看出，最小RTT和最大传输速率不能同时进行测量。如果我们要测量最大传输速率，则需要把链路填满，但这有可能产生队列，rtt可能较高；如果我们要测量最小RTT，则数据包越少越好，这导致传输速率较小。</p><p>因此BBR的解决办法是交替测量带宽和rtt，用一段时间内的带宽最大值和rtt最小值作为估计值。</p><h2 id="BBR算法介绍"><a href="#BBR算法介绍" class="headerlink" title="BBR算法介绍"></a>BBR算法介绍</h2><h3 id="Startup-amp-Drain"><a href="#Startup-amp-Drain" class="headerlink" title="Startup &amp; Drain"></a>Startup &amp; Drain</h3><p>Startup 是 BBR 控制的流启动时的状态，为了能尽快找到链路的瓶颈带宽 BtlBw，处于 Startup 状态的流每一个 RTT 会将报文发送速率会提高一倍。指数增长的发送速率使得amount in flight快速增加，也使得传输速率快速增加，从而 BBR 计算得到的 bandwith 也快速增加，当delivery rate 不再变化，此时 BBR 就能测量到最大传输速率（即bandwidth)。当 BBR 看到测量到的 bandwidth 在连续 3 个 RTT内不再显著增长时(增长幅度小于 25%)，变会退出 Startup 状态，进入 Drain 状态。</p><img src="/2022/04/23/TCP/BBR_STARTUP.png" class=""><p>Drain 状态的目标是让amount in flight回到 BDP 的水平，如图所示，使其回到转折点。该阶段存在的意义是为了抵消掉 Startup 状态后期向网络灌入的超量报文。随后，将进入 Probe Bandwidth 状态。</p><img src="/2022/04/23/TCP/BBR_DRAIN.png" class=""><h3 id="Probe-Bandwidth-状态"><a href="#Probe-Bandwidth-状态" class="headerlink" title="Probe Bandwidth 状态"></a>Probe Bandwidth 状态</h3><p>Probe Bandwidth 是四个状态中唯一的稳态，也是持续时间最长的状态。在此状态下，BBR 会不断的去探测(或者说是压榨)带宽。</p><p>BBR 定义了一个gain cycling的概念，以此控制报文发送速度。具体来说，一个 cycle 包含 8 个阶段，每个阶段的持续时间为 1 个 min RTT。8 个阶段的增益系数分别为：1.25、0.75、1、1、1、1、1、1。当处于增益系数值为 1.25 的阶段时，意味着发送速率是当前计算值的 1.25 倍，此时 BBR 发送速率也会变成正常情况下的 1.25 倍(踩油门)。而当处于增益系数值为 0.75 的阶段时，相应的发送速率是正常情况的 0.75 倍(踩刹车)。而增益系数值为 1 时，发送速率就是正常值(巡航)。</p><p>BBR 一脚油门一脚刹车的组合保证了当链路带宽不变时，这条流不会向链路灌入超量的报文。而 6&#x2F;8 时间段里的增益系数值为 1 又使得大部分时候，发送报文的速率是稳定的。</p><img src="/2022/04/23/TCP/BBR_PROBE_BW.png" class=""><h3 id="Probe-RTT-状态"><a href="#Probe-RTT-状态" class="headerlink" title="Probe RTT 状态"></a>Probe RTT 状态</h3><p>Probe RTT 状态的目的是为了探测链路的固有往返时延(RTprop)，如果 min-RTT 在 10s 内没有刷新，则无论目前BBR处于哪个状态，BBR 都会强制将状态切换到 Probe RTT。进入 Probe RTT 状态后，BBR 会将拥塞窗口限制到一个非常小的值，并持续至少 200ms, 目的是保证这条流不会引起中间设备上的报文堆积。</p><img src="/2022/04/23/TCP/BBR_PROBE_RTT.png" class=""><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>现在我们可以回答前言提出的几个问题：</p><ol><li>TCP-RENO算法通过实现AIMD（加性增乘性减）原则来控制拥塞窗口，其局限性在于进入拥塞避免阶段窗口增速太慢，在长肥网络的场景下不能充分利用网络带宽。</li><li>为了解决带宽利用问题，TCP-BIC和CUBIC算法在拥塞避免阶段将窗口大小的增加速度进行提速。</li><li>BBR算法主要是为了解决buffer bloat的情况。TCP传统拥塞算法感知不到buffer bloat的状态，会持续向链路中发包，数据传输速率不会因此增加，而链路反而会变得更加拥塞。BBR算法通过估计带宽和RTT，尽可能使链路维持在带宽利用充分但不排队的状态，以此来维持最大数据传输速率。和TCP拥塞算法相比，BBR算法主要基于带宽和RTT的估计来运作。</li></ol>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;发生拥塞控制的原因：资源(带宽、交换节点的缓存、处理机)的需求&amp;gt;可用资源。拥塞控制就是为了防止过多的数据注入到网络中，这样可以使网络中的路由器或者链路不至于过载。&lt;/p&gt;
+&lt;p&gt;本篇学习笔记需要理清的问题有以下几点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;TCP RENO算法（教科书算法）是如何控制网络拥塞的？有什么局限性？&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;为了解决这个局限性，TCP的拥塞算法是如何改进的？&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Google提出的BBR算法和TCP广泛使用的拥塞算法相比，有何不同？有何优点？&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="计算机网络" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://example.com/2022/04/23/hello-world/"/>
+    <id>http://example.com/2022/04/23/hello-world/</id>
+    <published>2022-04-23T12:26:53.000Z</published>
+    <updated>2022-05-15T14:23:03.258Z</updated>
+    
+    <content type="html"><![CDATA[<p>为了督促自己看书写笔记，我建了这个博客。以后读书笔记就放在这个博客里了，欢迎大家关注收藏！</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;为了督促自己看书写笔记，我建了这个博客。以后读书笔记就放在这个博客里了，欢迎大家关注收藏！&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+</feed>

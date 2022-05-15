@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="关于TCP协议的一些疑惑前言本文需要搞清楚的问题有：  为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？ 为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？ SYN攻击是什么？如何避免？ IP层的MTU是什么？TCP为什么需要MSS？ 如果已经建立了连接，客户端突然故障">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于TCP协议的一些小疑惑">
+<meta property="og:url" content="http://example.com/2022/05/04/TCPConfusion/index.html">
+<meta property="og:site_name" content="复方汤剂">
+<meta property="og:description" content="关于TCP协议的一些疑惑前言本文需要搞清楚的问题有：  为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？ 为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？ SYN攻击是什么？如何避免？ IP层的MTU是什么？TCP为什么需要MSS？ 如果已经建立了连接，客户端突然故障">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190127102442394.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019012710245146.jpg">
+<meta property="article:published_time" content="2022-05-04T12:26:53.000Z">
+<meta property="article:modified_time" content="2022-05-15T14:24:24.654Z">
+<meta property="article:author" content="Ran">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190127102442394.jpg">
+
+<link rel="canonical" href="http://example.com/2022/05/04/TCPConfusion/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>关于TCP协议的一些小疑惑 | 复方汤剂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="复方汤剂" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">复方汤剂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/04/TCPConfusion/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Ran">
+      <meta itemprop="description" content="问题不大">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="复方汤剂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关于TCP协议的一些小疑惑
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-05-04 20:26:53" itemprop="dateCreated datePublished" datetime="2022-05-04T20:26:53+08:00">2022-05-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-15 22:24:24" itemprop="dateModified" datetime="2022-05-15T22:24:24+08:00">2022-05-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.6k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="关于TCP协议的一些疑惑"><a href="#关于TCP协议的一些疑惑" class="headerlink" title="关于TCP协议的一些疑惑"></a>关于TCP协议的一些疑惑</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文需要搞清楚的问题有：</p>
+<ol>
+<li>为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？</li>
+<li>为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？</li>
+<li>SYN攻击是什么？如何避免？</li>
+<li>IP层的MTU是什么？TCP为什么需要MSS？</li>
+<li>如果已经建立了连接，客户端突然故障了怎么办？</li>
+<li>重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？</li>
+<li>TCP 是如何解决窗口关闭时，潜在的死锁现象呢？</li>
+<li>流量控制中的糊涂窗口综合征是什么？如何避免？</li>
+</ol>
+<span id="more"></span>
+
+<h2 id="TCP基本概况"><a href="#TCP基本概况" class="headerlink" title="TCP基本概况"></a>TCP基本概况</h2><p>TCP状态变迁图如图所示（摘自《TCP&#x2F;IP详解》）</p>
+<p>在建立连接的三次握手过程中，服务端和客户端的状态变迁分别为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">客户端closed--发syn--&gt;SYN_SENT--收syn, ack,发ack--&gt;客户端established</span><br><span class="line">服务端closed--&gt;listen--收到syn, 发syn, ack--&gt;SYN收到--收ack--&gt;服务端established</span><br></pre></td></tr></table></figure>
+
+<p>在断开连接的四次分手过程中，服务端和客户端的状态迁移分别为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">服务端established--收fin, 发ack--&gt;close_wait --应用进程关闭, 发fin--&gt; last_ack --收ack--&gt;服务端closed</span><br><span class="line">客户端established--应用进程关闭,发fin--&gt;fin_wait_1--收ack--&gt;fin_wait_2--收fin,发ack--&gt;time_wait,2MSL--&gt;closed</span><br></pre></td></tr></table></figure>
+
+<h2 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h2><blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/traditional/p/12936575.html">https://www.cnblogs.com/traditional/p/12936575.html</a></p>
+</blockquote>
+<h3 id="为何TCP协议握手要设计成三次？"><a href="#为何TCP协议握手要设计成三次？" class="headerlink" title="为何TCP协议握手要设计成三次？"></a>为何TCP协议握手要设计成三次？</h3><p>首先，两个实体建立连接，至少需要两个步骤。举例来说，实体A要和实体B建立良好的通信关系，则第一步A要主动告诉B它想通信了，第二步则是B回复A它可以建立通信。但这个例子是建立在实体A和实体B的接受能力和发送能力良好且两者通信顺畅的情况下。</p>
+<p>如果TCP协议握手只设计成两次的话，会产生以下的问题：</p>
+<ol>
+<li><strong>防止旧的初始化报文造成混乱</strong>。举例来说，假设现在客户端给服务端发送了一个SYN报文，记作旧报文，但由于网络或者种种其它问题，在规定时间内客户端没有收到来自服务端的报文，因此客户端又发送了一个SYN报文，记作新报文。此时服务端先收到了旧报文，给客户端回了一个SYN+ACK报文，称为旧回复报文，此后服务端又收到了新报文，给客户端又回了个新回复报文。假设客户端先收到新回复报文，与B建立了连接；此后收到旧回复报文，并将之丢弃。服务端将无法感知客户端丢弃了旧回复报文，可能一直处于等待数据的状态，浪费资源。</li>
+<li>双方初始化序列号未达成共识。还是上面的例子，假设服务端先发的新报文的回复a，再发的旧报文的回复b，此时服务端期待拿到b中序列号的ack；但客户端会丢弃回复b，后续传数据时会用a中携带的服务端的序列号，此时就出现了双方没有就服务端的初始序列号达成共识，会造成通信混乱。</li>
+</ol>
+<p>当TCP协议握手三次的时候，如果客户端收到旧回复报文，则会给服务端发送RST包告诉服务端异常终止连接。</p>
+<h3 id="为何TCP协议挥手需要四次？"><a href="#为何TCP协议挥手需要四次？" class="headerlink" title="为何TCP协议挥手需要四次？"></a>为何TCP协议挥手需要四次？</h3><ul>
+<li>客户端发送fin只是为了告诉服务端自己已经没有数据要发送了，客户端仍然可以接收数据。此时服务端可能还有数据要处理或者还有数据要发送给客户端，因此服务端返回ack来表明自己已经知道客户端没数据发了。</li>
+<li>等到服务端处理完后，发送fin告诉客户端自己也没有需要发送的数据了，可以正式关闭连接，客户端需要回复ack给服务端来表明自己已经知道服务端没有需要发送的数据了。</li>
+</ul>
+<p>可以看到，服务端的ack和fin是分开发的，因此挥手需要四次。</p>
+<h3 id="为什么需要TIME-WAIT状态？为何TIME-WAIT等待时间是2MSL？TIME-WAIT过多的危害？"><a href="#为什么需要TIME-WAIT状态？为何TIME-WAIT等待时间是2MSL？TIME-WAIT过多的危害？" class="headerlink" title="为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？"></a>为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？</h3><blockquote>
+<p> 参考《TCP&#x2F;IP详解》18.6.1 2MSL等待状态</p>
+</blockquote>
+<h4 id="需要TIME-WAIT的原因"><a href="#需要TIME-WAIT的原因" class="headerlink" title="需要TIME_WAIT的原因"></a>需要TIME_WAIT的原因</h4><p>主动关闭的一方需要TIME_WAIT状态的原因：</p>
+<ul>
+<li>保证最后向被动关闭的一方发送的ack能被对方接收到，从而能够正确的关闭连接。</li>
+<li>防止旧报文影响新连接。假设没有TIME_WAIT状态，双方都进入到了closed状态。此后socket被复用，双方建立了新连接，可能会接收到这个旧报文，导致数据错乱。</li>
+</ul>
+<p>假设客户端为主动关闭的一方。如果没有TIME_WAIT，此时客户端进入到了closed状态，假设客户端发送的最后一个ack丢失，则服务端会一直处于last_ack的状态，没有正常关闭。</p>
+<p>正是因为有了TIME_WAIT状态，假设客户端最后一个ack丢失，服务端在发送fin后一段时间没有收到ack，会重新发送fin数据包给客户端，客户端在TIME_WAIT阶段收到FIN包后，就会重新发ack给服务端。因此服务端可以通过这种机制正常关闭。</p>
+<h4 id="TIME-WAIT为2MSL的原因"><a href="#TIME-WAIT为2MSL的原因" class="headerlink" title="TIME_WAIT为2MSL的原因"></a>TIME_WAIT为2MSL的原因</h4><p>MSL，报文段最大生存时间（Maximum Segment Lifetime），是任何报文段在被丢弃之前在网络内存活的最长时间。</p>
+<p>TIME_WAIT的等待时间设置为2MSL是为了保证服务端能够收到最后的ack，客户端发送ack到ack消亡需要MSL时间，而收到服务端重传的fin又需要MSL时间，因此就是2MSL时间。</p>
+<p>具体而言就是，从服务端第一次发送fin包的时候就开始设置超时重传定时器。当客户端发送的ack丢失时服务端的定时器必然已经到期，服务端第二次发送fin包。客户端从发ack到ack丢包经历的时间&lt;&#x3D;MSL，从服务端再次发fin包到客户端收到fin包经历的时间&lt;&#x3D;MSL，因此保证客户端等待2MSL的时间内会收到服务端重发的fin包。当客户端收到fin包后，会再次重启2MSL计时器。</p>
+<p>问题：如果服务端重发的fin包也丢包了怎么办？</p>
+<p>答：连续两次丢包的概率太小了，因此忽略这种情况比解决这种情况更有性价比。</p>
+<h4 id="TIME-WAIT过多的危害"><a href="#TIME-WAIT过多的危害" class="headerlink" title="TIME_WAIT过多的危害"></a>TIME_WAIT过多的危害</h4><p>如果服务端有TCP连接处于TIME_WAIT状态，则说明是服务端主动断开的。倘若服务端TIME_WAIT状态过多，则有以下问题：</p>
+<ul>
+<li>对端口资源占用。当处于TIME_WAIT状态时，这个端口就不能被其它新连接使用了，而服务端端口资源时有限的。</li>
+<li>占用内存资源。</li>
+</ul>
+<h3 id="SYN攻击是什么？如何避免？"><a href="#SYN攻击是什么？如何避免？" class="headerlink" title="SYN攻击是什么？如何避免？"></a>SYN攻击是什么？如何避免？</h3><p>假设攻击者短时间伪造不同 IP 地址的 SYN 报文，服务端每接收到一个 SYN 报文，就进入SYN_RCVD 状态，但服务端发送出去的 ACK + SYN 报文，无法得到未知 IP 主机的 ACK 应答，久而久之就会占满服务端的 SYN 接收队列（半连接队列），使得服务器不能为正常用户服务。</p>
+<h4 id="正常流程"><a href="#正常流程" class="headerlink" title="正常流程"></a>正常流程</h4><ol>
+<li><p>当服务端接收到客户端的 SYN 报文时，会将其加入到内核的「SYN 队列」；</p>
+</li>
+<li><p>接着发送 SYN + ACK 给客户端，等待客户端回应 ACK 报文；</p>
+</li>
+<li><p>服务端接收到 ACK 报文后，将连接从「SYN 队列」移除并放入到「Accept 队列」；</p>
+</li>
+<li><p>应用通过调用 socket 接口 accpet()，从「Accept 队列」取出连接；</p>
+</li>
+</ol>
+<h4 id="SYN攻击时"><a href="#SYN攻击时" class="headerlink" title="SYN攻击时"></a>SYN攻击时</h4><p>第2、3步被阻塞，SYN队列被填满，队列中没有元素被取出，Accept 队列被应用消耗完后一直为空，应用程序取不到新连接。</p>
+<h4 id="避免方式"><a href="#避免方式" class="headerlink" title="避免方式"></a>避免方式</h4><p>打开<strong>tcp_syncookies</strong>，达到以下效果：</p>
+<ol>
+<li><p>当 「SYN 队列」满之后，后续服务器收到 SYN 包，不进入「SYN 队列」，而是计算出一个 cookie 值，再以 SYN + ACK 中的「序列号」的形式返回客户端；</p>
+</li>
+<li><p>服务端接收到客户端的应答报文时，服务器会检查这个 ACK 包的合法性。如果合法，直接放入到「Accept 队列」；</p>
+</li>
+<li><p>最后应用通过调用 socket 接口 accpet()，从「 Accept 队列」取出连接</p>
+</li>
+</ol>
+<h3 id="如果已经建立了连接，客户端突然故障了怎么办？"><a href="#如果已经建立了连接，客户端突然故障了怎么办？" class="headerlink" title="如果已经建立了连接，客户端突然故障了怎么办？"></a>如果已经建立了连接，客户端突然故障了怎么办？</h3><blockquote>
+<p>参考《TCP&#x2F;IP详解》第23章 保活定时器</p>
+</blockquote>
+<p>保活功能主要是为服务器应用程序提供的。如果一个客户端突然断电了，那就会在服务端留下一个半开放的连接，服务端一直会等待来自客户端的数据。保活功能能让服务端检测这种半开放的连接。</p>
+<p>如果某个特定的连接在2小时内没有任何动作，那么服务端会向客户端发送一个探测报文段。可能会出现以下几种情况：</p>
+<ol>
+<li>客户主机正常运行，TCP响应正常。服务端知道客户主机正常后，会将保活定时器复位。</li>
+<li>客户主机已经崩溃，处于关闭状态或者正在重启；或者客户主机正常运行，但不可达。此时客户TCP没有响应。服务端没收到响应，就会每隔75s发送一个探测，共发10个探测。如果服务端发送的探测一个响应都没都收到，服务端就会认为客户主机已经关闭了，就会终止连接。</li>
+<li>客户主机已经重新启动了。这时候客户主机会回复一个RST的报文，让服务端终止连接。</li>
+</ol>
+<h3 id="IP层的MTU是什么？TCP为什么需要MSS？"><a href="#IP层的MTU是什么？TCP为什么需要MSS？" class="headerlink" title="IP层的MTU是什么？TCP为什么需要MSS？"></a>IP层的MTU是什么？TCP为什么需要MSS？</h3><p>MTU：最大传输单元（Maximum transmission unit）。一般网络接口都会定义一个MTU，如果IP包的尺寸&lt;&#x3D;MTU，则这个数据包会原封不动从这个网络接口发送，否则需要分段。</p>
+<p>MSS：最大报文长度（Maximum Segment Size）。</p>
+<p>当TCP发送一个SYN时，将MSS值设置为外出接口的MTU长度减去固定的IP首部和TCP首部长度。MSS让主机限制另一端发送数据报的长度，如图所示，最终sun和slip不会发送超过256字节数据的报文段。较小MTU连接到另一个网络上的主机因此避免了分段。（参考《TCP&#x2F;IP详解》18.4 最大报文段长度）。</p>
+<p>不过这个方法不能完全避免分段，因为存在以下的情况：假设两端主机都连接到以太网上，都采用536字节的MSS，但中间网络采用的MTU为296字节，这样也会出现分段。为了解决这个问题，需要使用路径MTU发现机制。（参考《TCP&#x2F;IP详解》24.2 路径MTU发现）</p>
+<p>路径MTU发现：IP首部有个DF（Don’t Fragment）标志位，表示不要分片。如果IP包的长度超过了某个路由器的MTU，但设置了DF标志位，则路由器丢弃该数据包，并产生一个“不能分片”的ICMP错误发送给源主机，告诉源主机其MTU时多少。</p>
+<h3 id="重传机制中的SACK（Selective-Acknowledgment-选择性确认）是什么？Duplicate-SACK是什么？"><a href="#重传机制中的SACK（Selective-Acknowledgment-选择性确认）是什么？Duplicate-SACK是什么？" class="headerlink" title="重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？"></a>重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wdscq1234/article/details/52503315">https://blog.csdn.net/wdscq1234/article/details/52503315</a></p>
+</blockquote>
+<h4 id="SACK"><a href="#SACK" class="headerlink" title="SACK"></a>SACK</h4><p>当我们在收到一个失序的报文段时，TCP会立刻产生一个重复的ACK。但对方不知道一个重复的ack时由于报文丢失引起的，还是由于乱序引起的。对方采取的策略是，当它连续收到3个及以上重复ack的时候，就认为报文段丢失了，此时无需等待超时定时器到点，就立刻重传丢失的报文段。</p>
+<p>问题在于，此时重传这一个报文，还是重传这个报文以及以后的所有报文？例如，客户端发了seg1<del>seg10，服务端返回了三个ack seg2，此时客户端是只重传seg2，还是seg2</del>seg10都要重传呢？</p>
+<ul>
+<li>倘若只重传seg2，那假如seg2~seg7都丢失了，客户端需要一个个等待超时才重发，浪费了时间。</li>
+<li>倘若seg2~seg10都重传了，那假如只有seg2丢失了，多重传了这几个包，浪费了流量。</li>
+</ul>
+<p>SACK是TCP的一个选项（RFC 2018），它允许TCP单独确认非连续的片段，用来告知真正丢失的包。双方设备需要同时支持SACK才可以使用这个功能。SACK选项中包含一系列没有确认的数据的序列范围。</p>
+<h4 id="D-SACK"><a href="#D-SACK" class="headerlink" title="D-SACK"></a>D-SACK</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014023993/article/details/85041321">https://blog.csdn.net/u014023993/article/details/85041321</a></p>
+</blockquote>
+<p>RFC2883对SACK进行了扩展，称为D-SACK：使得扩展后的SACK具有通知发送端哪些数据被重复接收了。</p>
+<p>D-SACK使用了SACK的第一个段来做标志，<strong>如何判断D-SACK</strong>：</p>
+<ul>
+<li>如果SACK的第一个段的范围被ACK所覆盖，那么就是D-SACK。如图所示，说明3000-3499被重复接收了，4000以前的数据也收到了。</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20190127102442394.jpg" alt="img"></p>
+<ul>
+<li><p>如果SACK的第一个段的范围被SACK的第二个段覆盖，那么就是D-SACK。如图所示，[4000，SACK&#x3D;3000-3500, 4500-5000]说明4000前的数据已收到，3000-3500的数据重复收到，4000-4499的包丢失，4500-5000的包收到。</p>
+<p><img src="https://img-blog.csdnimg.cn/2019012710245146.jpg" alt="img"></p>
+</li>
+</ul>
+<p>上图中的[4000，SACK&#x3D;4500-5000]是普通的SACK，表明4000以前的数据已经收到，4500-5000的数据包已经收到但还未确认，即未收到4000-4499。</p>
+<h3 id="TCP-是如何解决窗口关闭时，潜在的死锁现象呢？"><a href="#TCP-是如何解决窗口关闭时，潜在的死锁现象呢？" class="headerlink" title="TCP 是如何解决窗口关闭时，潜在的死锁现象呢？"></a>TCP 是如何解决窗口关闭时，潜在的死锁现象呢？</h3><blockquote>
+<p>参考《TCP&#x2F;IP详解》第22章 TCP的坚持定时器</p>
+</blockquote>
+<p>接收方通过通告窗口来进行流量控制。如果窗口大小为 0 时，就会阻止发送方给接收方传递数据，直到窗口变为非 0 为止，这就是窗口关闭。当发送方窗口关闭后，接收方处理完缓冲区的数据，会发送一个ACK告诉发送方新窗口值，万一这个ACK丢掉了，那就会出现死锁，即：发送方等待ack来告知它可以继续发数据，而接收方等待接收数据。</p>
+<p>为了防止这种死锁的情况发生，发送方使用坚持定时器（persist timer）来周期性向接收方查询窗口是否增大，这个用来查询的报文段叫做窗口探查（window probe）。</p>
+<h3 id="流量控制中的糊涂窗口综合征是什么？如何避免？"><a href="#流量控制中的糊涂窗口综合征是什么？如何避免？" class="headerlink" title="流量控制中的糊涂窗口综合征是什么？如何避免？"></a>流量控制中的糊涂窗口综合征是什么？如何避免？</h3><h3 id="多路IO复用？"><a href="#多路IO复用？" class="headerlink" title="多路IO复用？"></a>多路IO复用？</h3><h3 id="如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？"><a href="#如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？" class="headerlink" title="如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？"></a>如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？</h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/23/TCP/" rel="prev" title="TCP协议-从传统拥塞控制算法讲起">
+      <i class="fa fa-chevron-left"></i> TCP协议-从传统拥塞控制算法讲起
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/04/what-happens-after-entering-the-url/" rel="next" title="输入url后发生了什么">
+      输入url后发生了什么 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8ETCP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E7%96%91%E6%83%91"><span class="nav-number">1.</span> <span class="nav-text">关于TCP协议的一些疑惑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%86%B5"><span class="nav-number">1.2.</span> <span class="nav-text">TCP基本概况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AD%94%E7%96%91%E8%A7%A3%E6%83%91"><span class="nav-number">1.3.</span> <span class="nav-text">答疑解惑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BD%95TCP%E5%8D%8F%E8%AE%AE%E6%8F%A1%E6%89%8B%E8%A6%81%E8%AE%BE%E8%AE%A1%E6%88%90%E4%B8%89%E6%AC%A1%EF%BC%9F"><span class="nav-number">1.3.1.</span> <span class="nav-text">为何TCP协议握手要设计成三次？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BD%95TCP%E5%8D%8F%E8%AE%AE%E6%8C%A5%E6%89%8B%E9%9C%80%E8%A6%81%E5%9B%9B%E6%AC%A1%EF%BC%9F"><span class="nav-number">1.3.2.</span> <span class="nav-text">为何TCP协议挥手需要四次？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81TIME-WAIT%E7%8A%B6%E6%80%81%EF%BC%9F%E4%B8%BA%E4%BD%95TIME-WAIT%E7%AD%89%E5%BE%85%E6%97%B6%E9%97%B4%E6%98%AF2MSL%EF%BC%9FTIME-WAIT%E8%BF%87%E5%A4%9A%E7%9A%84%E5%8D%B1%E5%AE%B3%EF%BC%9F"><span class="nav-number">1.3.3.</span> <span class="nav-text">为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9C%80%E8%A6%81TIME-WAIT%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">需要TIME_WAIT的原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TIME-WAIT%E4%B8%BA2MSL%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">TIME_WAIT为2MSL的原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TIME-WAIT%E8%BF%87%E5%A4%9A%E7%9A%84%E5%8D%B1%E5%AE%B3"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">TIME_WAIT过多的危害</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SYN%E6%94%BB%E5%87%BB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%EF%BC%9F"><span class="nav-number">1.3.4.</span> <span class="nav-text">SYN攻击是什么？如何避免？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%B5%81%E7%A8%8B"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">正常流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SYN%E6%94%BB%E5%87%BB%E6%97%B6"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">SYN攻击时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">1.3.4.3.</span> <span class="nav-text">避免方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%B7%B2%E7%BB%8F%E5%BB%BA%E7%AB%8B%E4%BA%86%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AA%81%E7%84%B6%E6%95%85%E9%9A%9C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">1.3.5.</span> <span class="nav-text">如果已经建立了连接，客户端突然故障了怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP%E5%B1%82%E7%9A%84MTU%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9FTCP%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81MSS%EF%BC%9F"><span class="nav-number">1.3.6.</span> <span class="nav-text">IP层的MTU是什么？TCP为什么需要MSS？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6%E4%B8%AD%E7%9A%84SACK%EF%BC%88Selective-Acknowledgment-%E9%80%89%E6%8B%A9%E6%80%A7%E7%A1%AE%E8%AE%A4%EF%BC%89%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9FDuplicate-SACK%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.3.7.</span> <span class="nav-text">重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SACK"><span class="nav-number">1.3.7.1.</span> <span class="nav-text">SACK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#D-SACK"><span class="nav-number">1.3.7.2.</span> <span class="nav-text">D-SACK</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%AA%97%E5%8F%A3%E5%85%B3%E9%97%AD%E6%97%B6%EF%BC%8C%E6%BD%9C%E5%9C%A8%E7%9A%84%E6%AD%BB%E9%94%81%E7%8E%B0%E8%B1%A1%E5%91%A2%EF%BC%9F"><span class="nav-number">1.3.8.</span> <span class="nav-text">TCP 是如何解决窗口关闭时，潜在的死锁现象呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E4%B8%AD%E7%9A%84%E7%B3%8A%E6%B6%82%E7%AA%97%E5%8F%A3%E7%BB%BC%E5%90%88%E5%BE%81%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%EF%BC%9F"><span class="nav-number">1.3.9.</span> <span class="nav-text">流量控制中的糊涂窗口综合征是什么？如何避免？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AFIO%E5%A4%8D%E7%94%A8%EF%BC%9F"><span class="nav-number">1.3.10.</span> <span class="nav-text">多路IO复用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9CTCP%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E5%87%BA%E7%8E%B0%E9%97%AE%E9%A2%98%E4%BA%86%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%B6%88%E6%81%AF%E4%B8%A2%E5%8C%85%E4%BA%86%E4%BC%9A%E6%80%8E%E6%A0%B7%EF%BC%9F%E7%AC%AC%E4%BA%8C%E4%B8%AA%E6%B6%88%E6%81%AF%E4%B8%A2%E5%8C%85%E4%BA%86%E4%BC%9A%E6%80%8E%E6%A0%B7%EF%BC%9F%E7%AC%AC%E4%B8%89%E4%B8%AA%E6%B6%88%E6%81%AF%E4%B8%A2%E5%8C%85%E4%BA%86%E4%BC%9A%E6%80%8E%E6%A0%B7%EF%BC%9F"><span class="nav-number">1.3.11.</span> <span class="nav-text">如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ran"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Ran</p>
+  <div class="site-description" itemprop="description">问题不大</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/iris-in-my-garden" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;iris-in-my-garden" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ran</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">13k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">12 mins.</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
