@@ -4,7 +4,7 @@
   <url>
     <loc>http://example.com/2022/06/28/Getting-to-know-redis/</loc>
     
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -76,7 +76,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -85,15 +85,15 @@
 
   
   <url>
-    <loc>http://example.com/categories/Redis/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <loc>http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <loc>http://example.com/categories/Redis/</loc>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
