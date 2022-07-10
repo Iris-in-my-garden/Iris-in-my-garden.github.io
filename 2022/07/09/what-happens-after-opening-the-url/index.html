@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="前言  本文主要参考了《网络是怎样连接的》  从用户在浏览器地址栏输入url并按下回车开始，到浏览器完全显示出网页这整个过程，本文将其总结分为四个阶段：  浏览器向本机网卡发送数据 本机网卡将数据发送到服务器 服务器处理数据并返回结果 浏览器收到结果后进行展示  本文将重点阐述前三个步骤所发生的故事。">
+  <meta name="description" content="前言  本文主要参考了《网络是怎样连接的》这本书  从用户在浏览器地址栏输入url并按下回车开始，到浏览器完全显示出网页这整个过程，本文将其总结分为四个阶段：  浏览器向本机网卡发送数据 本机网卡将数据发送到服务器 服务器处理数据并返回结果 浏览器收到结果后进行展示  本文将重点阐述前三个步骤所发生的故事。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="输入url后发生了什么">
 <meta property="og:url" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/index.html">
 <meta property="og:site_name" content="复方汤剂">
-<meta property="og:description" content="前言  本文主要参考了《网络是怎样连接的》  从用户在浏览器地址栏输入url并按下回车开始，到浏览器完全显示出网页这整个过程，本文将其总结分为四个阶段：  浏览器向本机网卡发送数据 本机网卡将数据发送到服务器 服务器处理数据并返回结果 浏览器收到结果后进行展示  本文将重点阐述前三个步骤所发生的故事。">
+<meta property="og:description" content="前言  本文主要参考了《网络是怎样连接的》这本书  从用户在浏览器地址栏输入url并按下回车开始，到浏览器完全显示出网页这整个过程，本文将其总结分为四个阶段：  浏览器向本机网卡发送数据 本机网卡将数据发送到服务器 服务器处理数据并返回结果 浏览器收到结果后进行展示  本文将重点阐述前三个步骤所发生的故事。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/introduction.png">
 <meta property="og:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/ip_structure.png">
@@ -40,7 +40,7 @@
 <meta property="og:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/server_structure.png">
 <meta property="og:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/server_connect.png">
 <meta property="article:published_time" content="2022-07-09T01:35:39.000Z">
-<meta property="article:modified_time" content="2022-07-10T08:41:23.420Z">
+<meta property="article:modified_time" content="2022-07-10T10:33:44.477Z">
 <meta property="article:author" content="Ran">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/introduction.png">
@@ -204,7 +204,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-10 16:41:23" itemprop="dateModified" datetime="2022-07-10T16:41:23+08:00">2022-07-10</time>
+                <time title="Modified: 2022-07-10 18:33:44" itemprop="dateModified" datetime="2022-07-10T18:33:44+08:00">2022-07-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,7 +249,7 @@
 
       
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
-<p> 本文主要参考了《网络是怎样连接的》</p>
+<p> 本文主要参考了《网络是怎样连接的》这本书</p>
 </blockquote>
 <p>从用户在浏览器地址栏输入url并按下回车开始，到浏览器完全显示出网页这整个过程，本文将其总结分为四个阶段：</p>
 <ul>
