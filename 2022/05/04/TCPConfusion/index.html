@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190127102442394.jpg">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/2019012710245146.jpg">
 <meta property="article:published_time" content="2022-05-04T12:26:53.000Z">
-<meta property="article:modified_time" content="2022-07-10T01:41:21.254Z">
+<meta property="article:modified_time" content="2022-07-10T08:55:01.372Z">
 <meta property="article:author" content="Ran">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2022/05/04/TCPConfusion/TCP.png">
@@ -196,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-10 09:41:21" itemprop="dateModified" datetime="2022-07-10T09:41:21+08:00">2022-07-10</time>
+                <time title="Modified: 2022-07-10 16:55:01" itemprop="dateModified" datetime="2022-07-10T16:55:01+08:00">2022-07-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -221,7 +221,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>6.8k</span>
+              <span>7.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -266,7 +266,22 @@
 <p>在断开连接的四次分手过程中，服务端和客户端的状态迁移分别为：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">服务端established--收fin, 发ack--&gt;close_wait --应用进程关闭, 发fin--&gt; last_ack --收ack--&gt;服务端closed</span><br><span class="line">客户端established--应用进程关闭,发fin--&gt;fin_wait_1--收ack--&gt;fin_wait_2--收fin,发ack--&gt;time_wait,2MSL--&gt;closed</span><br></pre></td></tr></table></figure>
 
-<h2 id="TCP保证可靠传输"><a href="#TCP保证可靠传输" class="headerlink" title="TCP保证可靠传输"></a>TCP保证可靠传输</h2><h1 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h1><h2 id="为何TCP协议握手要设计成三次？"><a href="#为何TCP协议握手要设计成三次？" class="headerlink" title="为何TCP协议握手要设计成三次？"></a>为何TCP协议握手要设计成三次？</h2><p>首先，两个实体建立连接，至少需要两个步骤。举例来说，实体A要和实体B建立良好的通信关系，则第一步A要主动告诉B它想通信了，第二步则是B回复A它可以建立通信。但这个例子是建立在实体A和实体B的接受能力和发送能力良好且两者通信顺畅的情况下。</p>
+<h2 id="TCP保证可靠传输"><a href="#TCP保证可靠传输" class="headerlink" title="TCP保证可靠传输"></a>TCP保证可靠传输</h2><p>TCP保证可靠传输的机制有以下几点：</p>
+<ul>
+<li>有序：TCP每个报文都有编号。接收方会对报文进行排序，按序把报文传给应用层。</li>
+<li>校验和：端到端校验和，确保数据没有发生变化。</li>
+<li>丢弃重复的数据。</li>
+<li>重传机制：<ul>
+<li>基于计时器的重传：TCP发送报文后，会启动计时器。如果没有在规定时间内收到ACK包，就将重发这个报文。</li>
+<li>快重传：如果发送方连续收到三个重复的ACK，则发送方立刻重传相关报文段，而不必等待重传计时器到期。</li>
+<li>SACK：在快速重传的基础上，返回最近收到的报文段的序列号范围。</li>
+<li>DSACK：这个机制是在 SACK 的基础上，额外携带信息，告知发送方有哪些数据包自己重复接收了。</li>
+</ul>
+</li>
+<li>流量控制：通告窗口控制发送方发送速率，防止因缓冲区大小不足而导致报文丢失。</li>
+<li>拥塞控制：网络拥塞时，减少数据发送。</li>
+</ul>
+<h1 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h1><h2 id="为何TCP协议握手要设计成三次？"><a href="#为何TCP协议握手要设计成三次？" class="headerlink" title="为何TCP协议握手要设计成三次？"></a>为何TCP协议握手要设计成三次？</h2><p>首先，两个实体建立连接，至少需要两个步骤。举例来说，实体A要和实体B建立良好的通信关系，则第一步A要主动告诉B它想通信了，第二步则是B回复A它可以建立通信。但这个例子是建立在实体A和实体B的接受能力和发送能力良好且两者通信顺畅的情况下。</p>
 <p>如果TCP协议握手只设计成两次的话，会产生以下的问题：</p>
 <ol>
 <li><strong>防止旧的初始化报文造成混乱</strong>。举例来说，假设现在客户端给服务端发送了一个SYN报文，记作旧报文，但由于网络或者种种其它问题，在规定时间内客户端没有收到来自服务端的报文，因此客户端又发送了一个SYN报文，记作新报文。此时服务端先收到了旧报文，给客户端回了一个SYN+ACK报文，称为旧回复报文，此后服务端又收到了新报文，给客户端又回了个新回复报文。假设客户端先收到新回复报文，与B建立了连接；此后收到旧回复报文，并将之丢弃。服务端将无法感知客户端丢弃了旧回复报文，可能一直处于等待数据的状态，浪费资源。</li>
@@ -546,12 +561,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">43k</span>
+    <span title="Symbols count total">46k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">39 mins.</span>
+    <span title="Reading time total">42 mins.</span>
 </div>
 
         
