@@ -20,17 +20,23 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="talk is cheap. 知行合一">
+  <meta name="description" content="前言  本文主要参考了《网络是怎样连接的》，并补充了自己感兴趣的一些内容。  从用户在浏览器地址栏输入url并按下回车开始，到浏览器完全显示出网页这整个过程，本文将其总结分为四个阶段： （1）浏览器向本机网卡发送数据 （2）本机网卡将数据发送到服务器 （3）服务器处理数据并返回结果 （4）浏览器收到结果后进行展示 本文将重点阐述前三个步骤所发生的故事。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="what-happens-after-opening-the-url">
+<meta property="og:title" content="输入url后发生了什么">
 <meta property="og:url" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/index.html">
 <meta property="og:site_name" content="复方汤剂">
-<meta property="og:description" content="talk is cheap. 知行合一">
+<meta property="og:description" content="前言  本文主要参考了《网络是怎样连接的》，并补充了自己感兴趣的一些内容。  从用户在浏览器地址栏输入url并按下回车开始，到浏览器完全显示出网页这整个过程，本文将其总结分为四个阶段： （1）浏览器向本机网卡发送数据 （2）本机网卡将数据发送到服务器 （3）服务器处理数据并返回结果 （4）浏览器收到结果后进行展示 本文将重点阐述前三个步骤所发生的故事。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/introduction.png">
+<meta property="og:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/ip_structure.png">
+<meta property="og:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/DNS_lookup.png">
+<meta property="og:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/tcp_ip_software.png">
+<meta property="og:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/socket.png">
 <meta property="article:published_time" content="2022-07-09T01:35:39.000Z">
-<meta property="article:modified_time" content="2022-07-09T01:35:39.559Z">
+<meta property="article:modified_time" content="2022-07-10T03:41:17.602Z">
 <meta property="article:author" content="Ran">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/07/09/what-happens-after-opening-the-url/introduction.png">
 
 <link rel="canonical" href="http://example.com/2022/07/09/what-happens-after-opening-the-url/">
 
@@ -45,7 +51,7 @@
   };
 </script>
 
-  <title>what-happens-after-opening-the-url | 复方汤剂</title>
+  <title>输入url后发生了什么 | 复方汤剂</title>
   
 
 
@@ -174,7 +180,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          what-happens-after-opening-the-url
+          输入url后发生了什么
         </h1>
 
         <div class="post-meta">
@@ -185,6 +191,22 @@
               <span class="post-meta-item-text">Posted on</span>
 
               <time title="Created: 2022-07-09 09:35:39" itemprop="dateCreated datePublished" datetime="2022-07-09T09:35:39+08:00">2022-07-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-07-10 11:41:17" itemprop="dateModified" datetime="2022-07-10T11:41:17+08:00">2022-07-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
             </span>
 
           
@@ -200,14 +222,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>0</span>
+              <span>4.6k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>4 mins.</span>
             </span>
 
         </div>
@@ -219,7 +241,71 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p> 本文主要参考了《网络是怎样连接的》，并补充了自己感兴趣的一些内容。</p>
+</blockquote>
+<p>从用户在浏览器地址栏输入url并按下回车开始，到浏览器完全显示出网页这整个过程，本文将其总结分为四个阶段：</p>
+<p>（1）浏览器向本机网卡发送数据</p>
+<p>（2）本机网卡将数据发送到服务器</p>
+<p>（3）服务器处理数据并返回结果</p>
+<p>（4）浏览器收到结果后进行展示</p>
+<p>本文将重点阐述前三个步骤所发生的故事。</p>
+<span id="more"></span>
+
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>当我们在浏览器地址栏中输入网址时，浏览器首先会按照一定的规则去解析网址，然后根据其含义来生成请求消息。接着，浏览器委托操作系统中的网络控制软件（协议栈）将消息发送给服务器。</p>
+<p>协议栈收到请求消息后，会将消息进行打包，然后加上目的地址等信息。接着，协议栈将包交给网卡（负责以太网或无线网络通信的硬件），网卡会将数据包转换为电信号并通过网线发送出去。这样，数据包就进入到了网络中。</p>
+<p>本文假设客户端计算机是连接到家庭或者公司的局域网中，然后再通过ADSL和光纤到户（FTTH）等宽带线路接入互联网。在这样的场景中，网卡发送的包会经过交换机等设备，到达用来接入互联网的路由器。</p>
+<p>接下来，数据从用来介入互联网的路由器出发，进入了互联网的内部。互联网的入口线路叫做接入网。接入网连接到签约的网络运营商，并接入被称为接入点（Point Of Presence，PoP）的设备。数据包首先通过接入网被发送到接入点，然后再发往骨干网中。</p>
+<p>通过骨干网后，数据包最终到达了Web服务器所在的局域网中。接着，数据包会遇到防火墙，防火墙会对数据包进行检查。检查完后，数据包可能会遇到缓存服务器。此外，在大型网站中，可能还会配备负载均衡器，还可能会使用内容分发服务。经过这些机制后，数据包最后到达Web服务器。</p>
+<p>当数据包到达Web服务器后，数据会被协议栈解包还原为原始的请求消息，然后交给Web服务器程序。接下来，Web服务器程序分析请求消息的含义，并按照其中的指示将数据装入到响应消息中，然后发回给客户端。</p>
+<p>当响应到达客户端之后，浏览器会从中读取出网页的数据并在屏幕上显示出来。到这里，访问Web服务器的一系列操作就全部完成了。</p>
+<p>流程如图所示（从右往左看）：</p>
+<img src="/2022/07/09/what-happens-after-opening-the-url/introduction.png" class="">
+
+<h1 id="浏览器向本机网卡发送数据"><a href="#浏览器向本机网卡发送数据" class="headerlink" title="浏览器向本机网卡发送数据"></a>浏览器向本机网卡发送数据</h1><h2 id="生成请求消息"><a href="#生成请求消息" class="headerlink" title="生成请求消息"></a>生成请求消息</h2><p>浏览器的第一步就是对URL进行解析，从而生成请求消息。URL中会包含Web服务器的域名和请求文件路径名。我们的场景是在地址栏中输入网址并显示网页，因此这里应该使用GET方法。HTTP相关方法以及请求消息结构参考<a href="/2022/05/13/HTTP/" title="关于HTTP不可不说的那些事">关于HTTP不可不说的那些事</a>。</p>
+<p>生成HTTP消息后，我们需要委托操作系统将消息发送给Web服务器。在委托操作系统发送消息前，必须提供通信对象的IP地址。</p>
+<p>IP地址：32bit，包含网络号和主机号，我们利用子网掩码来区分网络号和主机号。如图所示。</p>
+<p>子网掩码：32bit，子网掩码为1的部分表示网络号，为0的部分表示主机号。主机号为0表示整个子网；为255表示广播地址（向子网上所有设备发送包）。</p>
+<img src="/2022/07/09/what-happens-after-opening-the-url/ip_structure.png" class="">
+
+
+
+<h2 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h2><p>操作系统的Socket库提供了一个程序——解析器（gethostbyname）——用来负责执行解析。浏览器调用解析器后，解析器会向最近的DNS（Domain Name System）服务器发送查询消息，DNS服务器会返回包含IP地址的响应消息。解析器获得IP地址后，会将IP地址写入浏览器指定的内存地址中。</p>
+<p>此处需要注意的是，发送查询消息这个操作并不是由解析器自身来执行，而实委托给操作系统内部的协议栈来执行，协议栈执行发送消息的操作，然后通过网卡将消息发往DNS服务器。此外，向DNS服务器发送消息时，我们也需要知道DNS服务器的IP地址，这个IP地址时作为TCP&#x2F;IP的一个设置项目事先设置好的。</p>
+<p>DNS服务器上存储着包含了域名和对应IP的记录表。此外，域名存在层次结构，域名中越靠右的位置表示其层级越高，比如<a target="_blank" rel="noopener" href="http://www.xxx.com这个域名,最高级域名为根域名.,其次是com域名,然后是xxx.com域名,最后是www.xxx.com这个域名.在互联网中,负责管理下级域的dns服务器的ip地址会注册到其上级域名中./">www.xxx.com这个域名，最高级域名为根域名.，其次是com域名，然后是xxx.com域名，最后是www.xxx.com这个域名。在互联网中，负责管理下级域的DNS服务器的IP地址会注册到其上级域名中。</a></p>
+<p>DNS收到查询消息后，会从记录表中进行查询匹配的记录。如果查到了，就将该域名对应的IP地址返回给客户端。否则，DNS会将客户端的查询消息转发给根域DNS服务器（互联网中的所有DNS服务器中都保存了根域DNS服务器信息），根域DNS服务器返回其所管理的下级DNS服务器的地址，依次顺藤摸瓜可以找到目标DNS服务器，因此可以找到所需域名的IP地址了。</p>
+<img src="/2022/07/09/what-happens-after-opening-the-url/DNS_lookup.png" class="">
+
+<p>在现实世界中，一台DNS服务器可能管理多个域的信息，上级域和下级域可能共享同一台DNS服务器。这种情况下，访问上级DNS服务器后可以直接访问下下级DNS服务器。除此之外，DNS服务器有缓存功能，可以记住之前查询过的域名，因此不必每次都从根域开始找，减少了缓存所需要的时间。需要注意的是，DNS服务器中保存的缓存信息都设置有一个有效期，当缓存数据过期后，缓存数据就会被删掉了。</p>
+<h2 id="协议栈动作"><a href="#协议栈动作" class="headerlink" title="协议栈动作"></a>协议栈动作</h2><p>TCP&#x2F;IP软件采用分层结构，如图所示。</p>
+<img src="/2022/07/09/what-happens-after-opening-the-url/tcp_ip_software.png" class="">
+
+<p>流程如图所示，其中DNS消息是UDP模块来负责收发，浏览器发送的消息是经由TCP模块来负责收发。</p>
+<ul>
+<li>connect：创建客户端与服务端之间的连接，即通信双方交换控制信息（包括TCP、IP首部），并分配缓冲区存放收发的数据。实际上可以理解为TCP的三次握手过程，具体参见<a href="/2022/05/04/TCPConfusion/" title="关于TCP协议的一些疑惑">关于TCP协议的一些疑惑</a>中的“TCP基本概况”。</li>
+<li>write：应用程序调用write将要发送的数据交给协议栈，协议栈收到数据后执行发送操作。应用程序在调用write的时候会指定发送数据的长度，在协议栈看来，要发送的数据就是一定长度的二进制字节序列而已。此外，协议栈收到数据后，会将数据存放在缓冲区中，等待应用程序的下一段数据。如果协议栈一收到数据马上发出去，则会发送大量的小包，降低网络效率。与“糊涂窗口综合症”类似，可参考<a href="/2022/05/04/TCPConfusion/" title="关于TCP协议的一些疑惑">关于TCP协议的一些疑惑</a>。那积累多少数据才会发送？<ul>
+<li>第一个判断要素是MSS。从应用程序收到的数据长度超过或者接近MSS时再发送出去。</li>
+<li>第二个判断要素是时间。当应用程序发送数据的频率不高时，如果每次都等到长度接近MSS再发送，可能等待时间过长造成延迟。因此，协议栈内部有一个计时器，当经过一定时间后，即使长度没有达到MSS，也应该立刻发出去。</li>
+<li>协议栈给应用程序提供了设置项，应用程序可以指定协议栈“不等待填满缓冲区直接发送”。浏览器这种会话型的应用数据一般会使用直接发送的选项。</li>
+</ul>
+</li>
+<li>read：</li>
+<li>close：TCP四次挥手。假设服务端先发送FIN，当客户端收到FIN时，协议栈会将自己的套接字标记为进入断开操作状态，并返回服务器一个ACK。接着协议栈等应用程序来取数据。应用程序调用read来取数据时，协议栈会告知应用程序数据已经全部收到了，此时，应用程序会调用close来结束数据收发操作，协议栈会发送一个FIN包给服务端，之后服务端返回ACK。</li>
+</ul>
+<img src="/2022/07/09/what-happens-after-opening-the-url/socket.png" class="">
+
+<p>网卡、集线器、路由器都没有错误补偿机制，一旦检测到错误就直接丢弃对应的包。TCP保证了可靠传输，具体参考<a href="/2022/05/04/TCPConfusion/" title="关于TCP协议的一些疑惑">关于TCP协议的一些疑惑</a>中的“TCP基本概况”章节。</p>
+<p>和服务器通信结束后，套接字并不会马上被删除，而是会等待一段时间后再被删除。等待这段时间是为了防止误操作。举例而言，假设客户端先发起断开，当客户端最后返回ACK号时，数据包丢失，此时服务端没有收到ACK包，会重发一次FIN，如果客户端套接字被删除，那么套接字对应的端口号被释放了。假设别的应用程序要创建套接字，恰好分配的端口号就是这个，而服务器重发的FIN正好到达，那么这个FIN就会错误地跑到了新套接字里，新套接字就开始执行断开操作了。</p>
+<p>TCP模块给数据包加上TCP首部后，将数据包委托给IP模块。IP模块收到TCP模块的委托后，在数据包的头部加上IP头部（包括IP地址）和MAC头部（以太网头部，包括MAC地址）。</p>
+<p>IP地址实际上是分配给网卡的，当计算机上有多块网卡时，这台计算机就会有多个IP地址。发送方IP地址需要判断发送使用的网卡，也相当于判断该把包发往哪个路由器。IP模块保存有一个路由表，根据一定的规则进行匹配选择网卡IP地址作为发送方IP地址，同时也可以拿到对应的路由IP地址。IP头部的接收方IP地址是通信对象的IP地址。</p>
+<p>加上IP头部后，还需要加上MAC头部，包含了发送方和接收方的MAC地址等信息。对于发送方MAC地址，MAC地址是在网卡生成的时候写入硬件里的，只要把这个值读出来就可以了；对于接收方MAC地址，我们可以拿到我们下一跳路由器的IP地址，然后通过ARP（Address Resolution Protocol，地址解析协议）查询目标路由器的MAC地址。<strong>所以接收方MAC地址实际上是下一跳路由器的MAC地址。</strong></p>
+<p>ARP：在同一子网内，发送广播，向所有设备提问：“xxxx这个ip地址是谁的？”，是这个IP地址的设备会回答：“这个IP地址是我的”，不是这个IP地址的设备会忽略广播。当我们查询到MAC地址后，会将查询结果放在ARP缓存中。之后再次发送包时，会先查询一下ARP缓存。ARP缓存也会设置过期时间，过期后删除缓存数据。（<strong>所有类型的缓存都需要考虑过期时间</strong>）。</p>
+<p>接下来，封装好的包会传递给网卡，网卡将这些数字信息转换为电信号或者光信号，并通过网线（或者光纤）发送出去，这些信号经由集线器、路由器等转发设备，一步步转发给接收方。</p>
+<h2 id="网卡动作"><a href="#网卡动作" class="headerlink" title="网卡动作"></a>网卡动作</h2><p>以太网：一种为多台计算机能够彼此自由和廉价地相互通信而设计地通信技术。具备三个基本性质：数据包接收方MAC地址代表目的地，发送方MAC地址识别发送方，以太类型识别包的内容。</p>
+<p>网卡驱动从IP模块获取到数据包后，会将其复制到网卡内的缓冲区内，然后向MAC模块发送发送包的命令。MAC模块会将包从缓冲区中取出，在开头加上报头和起始帧分界符，在末尾加上用于检测错误的帧校验序列。之后就将数字信息转换为电信号，通过网线发送出去了。</p>
+<p>在接收返回包时，网卡将信号转换为数字信号，转换的时候，会检查帧校验序列，如果不一致，这个包会被当做错误包被丢弃；如果校验没问题，则会检查包里的接收方MAC地址是否与网卡里的MAC地址一致，如果一致，放入缓冲器。然后，网卡向扩展总线中的中断信号线发送信号，该信号线通过计算机中的中断控制器连接到CPU。产生中断信号后，CPU会暂时挂起正在处理的任务，切换到操作系统中的中断处理程序。然后，中断处理程序会调用网卡驱动，控制网卡执行相应的接受操作。网卡驱动被调用后，会从网卡的驱动缓冲区中取出收到的数据包，判断以太协议类型，如果是IP协议，则将这个包交给TCP&#x2F;IP协议栈。IP模块会检查IP头部格式，检查接收方IP地址，如果不符合，则会通过ICMP消息将错误发送给发送方；如果符合，则等待所有分片到达并进行分片重组。接下来包被交给TCP模块。</p>
+<p>这里简要介绍一下UDP协议：不可靠协议，只单纯地发送包和接受包。首部有8字节：发送方端口号（2字节）、接收方端口号（2字节）、数据长度（2字节）和校验和（2字节）。DNS查询使用UDP，发送音频和视频数据时，也使用UDP。</p>
+<h1 id="本机网卡将数据发送到服务器"><a href="#本机网卡将数据发送到服务器" class="headerlink" title="本机网卡将数据发送到服务器"></a>本机网卡将数据发送到服务器</h1><h2 id="交换机和路由器的转发操作"><a href="#交换机和路由器的转发操作" class="headerlink" title="交换机和路由器的转发操作"></a>交换机和路由器的转发操作</h2><h2 id="ADSL和FTTH接入网"><a href="#ADSL和FTTH接入网" class="headerlink" title="ADSL和FTTH接入网"></a>ADSL和FTTH接入网</h2><h2 id="网络运营商"><a href="#网络运营商" class="headerlink" title="网络运营商"></a>网络运营商</h2><h1 id="服务器处理数据并返回结果"><a href="#服务器处理数据并返回结果" class="headerlink" title="服务器处理数据并返回结果"></a>服务器处理数据并返回结果</h1><h2 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h2><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><h2 id="缓存服务器"><a href="#缓存服务器" class="headerlink" title="缓存服务器"></a>缓存服务器</h2><h2 id="内容分发服务"><a href="#内容分发服务" class="headerlink" title="内容分发服务"></a>内容分发服务</h2>
     </div>
 
     
@@ -296,6 +382,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%90%91%E6%9C%AC%E6%9C%BA%E7%BD%91%E5%8D%A1%E5%8F%91%E9%80%81%E6%95%B0%E6%8D%AE"><span class="nav-number">3.</span> <span class="nav-text">浏览器向本机网卡发送数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E8%AF%B7%E6%B1%82%E6%B6%88%E6%81%AF"><span class="nav-number">3.1.</span> <span class="nav-text">生成请求消息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">域名解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E6%A0%88%E5%8A%A8%E4%BD%9C"><span class="nav-number">3.3.</span> <span class="nav-text">协议栈动作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1%E5%8A%A8%E4%BD%9C"><span class="nav-number">3.4.</span> <span class="nav-text">网卡动作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AC%E6%9C%BA%E7%BD%91%E5%8D%A1%E5%B0%86%E6%95%B0%E6%8D%AE%E5%8F%91%E9%80%81%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">本机网卡将数据发送到服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%92%8C%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E8%BD%AC%E5%8F%91%E6%93%8D%E4%BD%9C"><span class="nav-number">4.1.</span> <span class="nav-text">交换机和路由器的转发操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ADSL%E5%92%8CFTTH%E6%8E%A5%E5%85%A5%E7%BD%91"><span class="nav-number">4.2.</span> <span class="nav-text">ADSL和FTTH接入网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%BF%90%E8%90%A5%E5%95%86"><span class="nav-number">4.3.</span> <span class="nav-text">网络运营商</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">服务器处理数据并返回结果</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">5.1.</span> <span class="nav-text">防火墙</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">5.2.</span> <span class="nav-text">负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">5.3.</span> <span class="nav-text">缓存服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E6%9C%8D%E5%8A%A1"><span class="nav-number">5.4.</span> <span class="nav-text">内容分发服务</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -359,12 +446,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">33k</span>
+    <span title="Symbols count total">38k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">30 mins.</span>
+    <span title="Reading time total">34 mins.</span>
 </div>
 
         

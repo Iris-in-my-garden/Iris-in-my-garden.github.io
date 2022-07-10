@@ -20,20 +20,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="前言本文需要搞清楚的问题有：  为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？ 为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？ SYN攻击是什么？如何避免？ IP层的MTU是什么？TCP为什么需要MSS？ 如果已经建立了连接，客户端突然故障了怎么办？ 重传机制中的">
+  <meta name="description" content="前言 本文提出的问题主要参考了：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;traditional&#x2F;p&#x2F;12936575.html  本文需要搞清楚的问题有：  为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？ 为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？ S">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于TCP协议的一些疑惑">
 <meta property="og:url" content="http://example.com/2022/05/04/TCPConfusion/index.html">
 <meta property="og:site_name" content="复方汤剂">
-<meta property="og:description" content="前言本文需要搞清楚的问题有：  为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？ 为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？ SYN攻击是什么？如何避免？ IP层的MTU是什么？TCP为什么需要MSS？ 如果已经建立了连接，客户端突然故障了怎么办？ 重传机制中的">
+<meta property="og:description" content="前言 本文提出的问题主要参考了：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;traditional&#x2F;p&#x2F;12936575.html  本文需要搞清楚的问题有：  为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？ 为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？ S">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/05/04/TCPConfusion/TCP.png">
+<meta property="og:image" content="http://example.com/2022/05/04/TCPConfusion/TCP_MSS.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190127102442394.jpg">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/2019012710245146.jpg">
 <meta property="article:published_time" content="2022-05-04T12:26:53.000Z">
-<meta property="article:modified_time" content="2022-05-15T15:54:53.161Z">
+<meta property="article:modified_time" content="2022-07-10T01:41:21.254Z">
 <meta property="article:author" content="Ran">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190127102442394.jpg">
+<meta name="twitter:image" content="http://example.com/2022/05/04/TCPConfusion/TCP.png">
 
 <link rel="canonical" href="http://example.com/2022/05/04/TCPConfusion/">
 
@@ -194,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-15 23:54:53" itemprop="dateModified" datetime="2022-05-15T23:54:53+08:00">2022-05-15</time>
+                <time title="Modified: 2022-07-10 09:41:21" itemprop="dateModified" datetime="2022-07-10T09:41:21+08:00">2022-07-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -219,7 +221,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>6.1k</span>
+              <span>6.8k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -238,7 +240,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文需要搞清楚的问题有：</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>本文提出的问题主要参考了：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/traditional/p/12936575.html">https://www.cnblogs.com/traditional/p/12936575.html</a></p>
+</blockquote>
+<p>本文需要搞清楚的问题有：</p>
 <ol>
 <li>为何TCP协议握手要设计成三次？为何TCP协议挥手需要四次？TCP握手过程中出现问题了会怎样？</li>
 <li>为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？如何优化TIME_WAIT？</li>
@@ -248,20 +253,20 @@
 <li>重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？</li>
 <li>TCP 是如何解决窗口关闭时，潜在的死锁现象呢？</li>
 <li>流量控制中的糊涂窗口综合征是什么？如何避免？</li>
+<li>如果TCP握手过程出现丢包了会怎么样？</li>
 </ol>
 <span id="more"></span>
 
-<h1 id="TCP基本概况"><a href="#TCP基本概况" class="headerlink" title="TCP基本概况"></a>TCP基本概况</h1><p>TCP状态变迁图如图所示（摘自《TCP&#x2F;IP详解》）</p>
+<h1 id="TCP基本概况"><a href="#TCP基本概况" class="headerlink" title="TCP基本概况"></a>TCP基本概况</h1><h2 id="状态变迁"><a href="#状态变迁" class="headerlink" title="状态变迁"></a>状态变迁</h2><p>TCP状态变迁图如图所示（摘自《TCP&#x2F;IP详解》）</p>
+<img src="/2022/05/04/TCPConfusion/TCP.png" class="">
+
 <p>在建立连接的三次握手过程中，服务端和客户端的状态变迁分别为：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">客户端closed--发syn--&gt;SYN_SENT--收syn, ack,发ack--&gt;客户端established</span><br><span class="line">服务端closed--&gt;listen--收到syn, 发syn, ack--&gt;SYN收到--收ack--&gt;服务端established</span><br></pre></td></tr></table></figure>
 
 <p>在断开连接的四次分手过程中，服务端和客户端的状态迁移分别为：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">服务端established--收fin, 发ack--&gt;close_wait --应用进程关闭, 发fin--&gt; last_ack --收ack--&gt;服务端closed</span><br><span class="line">客户端established--应用进程关闭,发fin--&gt;fin_wait_1--收ack--&gt;fin_wait_2--收fin,发ack--&gt;time_wait,2MSL--&gt;closed</span><br></pre></td></tr></table></figure>
 
-<h1 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h1><blockquote>
-<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/traditional/p/12936575.html">https://www.cnblogs.com/traditional/p/12936575.html</a></p>
-</blockquote>
-<h2 id="为何TCP协议握手要设计成三次？"><a href="#为何TCP协议握手要设计成三次？" class="headerlink" title="为何TCP协议握手要设计成三次？"></a>为何TCP协议握手要设计成三次？</h2><p>首先，两个实体建立连接，至少需要两个步骤。举例来说，实体A要和实体B建立良好的通信关系，则第一步A要主动告诉B它想通信了，第二步则是B回复A它可以建立通信。但这个例子是建立在实体A和实体B的接受能力和发送能力良好且两者通信顺畅的情况下。</p>
+<h2 id="TCP保证可靠传输"><a href="#TCP保证可靠传输" class="headerlink" title="TCP保证可靠传输"></a>TCP保证可靠传输</h2><h1 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h1><h2 id="为何TCP协议握手要设计成三次？"><a href="#为何TCP协议握手要设计成三次？" class="headerlink" title="为何TCP协议握手要设计成三次？"></a>为何TCP协议握手要设计成三次？</h2><p>首先，两个实体建立连接，至少需要两个步骤。举例来说，实体A要和实体B建立良好的通信关系，则第一步A要主动告诉B它想通信了，第二步则是B回复A它可以建立通信。但这个例子是建立在实体A和实体B的接受能力和发送能力良好且两者通信顺畅的情况下。</p>
 <p>如果TCP协议握手只设计成两次的话，会产生以下的问题：</p>
 <ol>
 <li><strong>防止旧的初始化报文造成混乱</strong>。举例来说，假设现在客户端给服务端发送了一个SYN报文，记作旧报文，但由于网络或者种种其它问题，在规定时间内客户端没有收到来自服务端的报文，因此客户端又发送了一个SYN报文，记作新报文。此时服务端先收到了旧报文，给客户端回了一个SYN+ACK报文，称为旧回复报文，此后服务端又收到了新报文，给客户端又回了个新回复报文。假设客户端先收到新回复报文，与B建立了连接；此后收到旧回复报文，并将之丢弃。服务端将无法感知客户端丢弃了旧回复报文，可能一直处于等待数据的状态，浪费资源。</li>
@@ -324,10 +329,15 @@
 <li>客户主机已经崩溃，处于关闭状态或者正在重启；或者客户主机正常运行，但不可达。此时客户TCP没有响应。服务端没收到响应，就会每隔75s发送一个探测，共发10个探测。如果服务端发送的探测一个响应都没都收到，服务端就会认为客户主机已经关闭了，就会终止连接。</li>
 <li>客户主机已经重新启动了。这时候客户主机会回复一个RST的报文，让服务端终止连接。</li>
 </ol>
-<h2 id="IP层的MTU是什么？TCP为什么需要MSS？"><a href="#IP层的MTU是什么？TCP为什么需要MSS？" class="headerlink" title="IP层的MTU是什么？TCP为什么需要MSS？"></a>IP层的MTU是什么？TCP为什么需要MSS？</h2><p>MTU：最大传输单元（Maximum transmission unit）。一般网络接口都会定义一个MTU，如果IP包的尺寸&lt;&#x3D;MTU，则这个数据包会原封不动从这个网络接口发送，否则需要分段。</p>
-<p>MSS：最大报文长度（Maximum Segment Size）。</p>
-<p>当TCP发送一个SYN时，将MSS值设置为外出接口的MTU长度减去固定的IP首部和TCP首部长度。MSS让主机限制另一端发送数据报的长度，如图所示，最终sun和slip不会发送超过256字节数据的报文段。较小MTU连接到另一个网络上的主机因此避免了分段。（参考《TCP&#x2F;IP详解》18.4 最大报文段长度）。</p>
-<p>不过这个方法不能完全避免分段，因为存在以下的情况：假设两端主机都连接到以太网上，都采用536字节的MSS，但中间网络采用的MTU为296字节，这样也会出现分段。为了解决这个问题，需要使用路径MTU发现机制。（参考《TCP&#x2F;IP详解》24.2 路径MTU发现）</p>
+<h2 id="IP层的MTU是什么？TCP为什么需要MSS？"><a href="#IP层的MTU是什么？TCP为什么需要MSS？" class="headerlink" title="IP层的MTU是什么？TCP为什么需要MSS？"></a>IP层的MTU是什么？TCP为什么需要MSS？</h2><blockquote>
+<p>参考《TCP&#x2F;IP详解》18.4 最大报文段长度和 24.2 路径MTU发现</p>
+</blockquote>
+<p>MTU：最大传输单元（Maximum transmission unit）。一般网络接口都会定义一个MTU，如果IP包的尺寸&lt;&#x3D;MTU，则这个数据包会原封不动从这个网络接口发送，否则需要分段。通俗来说，就是一个网络包的最大长度，在以太网中一般为1500字节。</p>
+<p>MSS：最大报文长度（Maximum Segment Size）。通俗来说，除去头部后，一个网络包所能容纳的TCP数据的最大长度。</p>
+<p>当TCP发送一个SYN时，将MSS值设置为外出接口的MTU长度减去固定的IP首部和TCP首部长度。MSS让主机限制另一端发送数据报的长度，如图所示，最终sun和slip不会发送超过256字节数据的报文段。较小MTU连接到另一个网络上的主机因此避免了分段。</p>
+<img src="/2022/05/04/TCPConfusion/TCP_MSS.png" class="">
+
+<p>不过这个方法不能完全避免分段，因为存在以下的情况：假设两端主机都连接到以太网上，都采用536字节的MSS，但中间网络采用的MTU为296字节，这样也会出现分段。为了解决这个问题，需要使用路径MTU发现机制。</p>
 <p>路径MTU发现：IP首部有个DF（Don’t Fragment）标志位，表示不要分片。如果IP包的长度超过了某个路由器的MTU，但设置了DF标志位，则路由器丢弃该数据包，并产生一个“不能分片”的ICMP错误发送给源主机，告诉源主机其MTU时多少。</p>
 <h2 id="重传机制中的SACK（Selective-Acknowledgment-选择性确认）是什么？Duplicate-SACK是什么？"><a href="#重传机制中的SACK（Selective-Acknowledgment-选择性确认）是什么？Duplicate-SACK是什么？" class="headerlink" title="重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？"></a>重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？</h2><blockquote>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wdscq1234/article/details/52503315">https://blog.csdn.net/wdscq1234/article/details/52503315</a></p>
@@ -361,21 +371,38 @@
 <p>为了防止这种死锁的情况发生，发送方使用坚持定时器（persist timer）来周期性向接收方查询窗口是否增大，这个用来查询的报文段叫做窗口探查（window probe）。这种方法可以用来解决潜在的死锁现象。</p>
 <h2 id="流量控制中的糊涂窗口综合症是什么？如何避免？"><a href="#流量控制中的糊涂窗口综合症是什么？如何避免？" class="headerlink" title="流量控制中的糊涂窗口综合症是什么？如何避免？"></a>流量控制中的糊涂窗口综合症是什么？如何避免？</h2><blockquote>
 <p>参考《TCP&#x2F;IP详解》22.3 糊涂窗口综合症</p>
+<p><strong>ps：《TCP&#x2F;IP详解》真的不是机翻的吗…翻译实在是太差劲了</strong></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wdscq1234/article/details/52463952">https://blog.csdn.net/wdscq1234/article/details/52463952</a></p>
-<p><strong>碎碎念：《TCP&#x2F;IP详解》真的不是机翻的吗…翻译实在是太差劲了</strong></p>
+<p>“发送方避免发送小数据”这里的措施参考：《网络是怎样连接的》 2.3收发数据</p>
 </blockquote>
 <p>糊涂窗口综合症SWS（Silly Window Syndrome）（我觉得叫愚蠢窗口综合症更合适…）：通告窗口很小的时候，双方也会进行数据交换。举例来说，假设传输的数据很小，甚至比TCP+IP首部还小，那其实这样的传输就很浪费资源。这个现象可能发生在接收端，也可能发生在发送端。</p>
 <p>可以采取以下措施：</p>
 <ol>
-<li>接收方不通告小窗口。当「窗口大小」小于 min(MSS, 缓存空间 &#x2F; 2)时，就会向发送方通告窗口为 0，也就阻止了发送方再发数据过来。等到接收方处理了一些数据后，窗口大小&gt;&#x3D;min(MSS, 缓存空间 &#x2F; 2)，就可以把通告窗口让发送方发送数据过来。</li>
-<li>发送方避免发送小数据。<ul>
-<li>待发送的数据为一个全尺寸的段；</li>
-<li>TCP可以发送大小至少为另一端在此连接上通告的最大窗口大小的一半；</li>
-<li>纳格算法启动的情况下，TCP 在没有急需 ACK 的数据的情况下，TCP 可以发送任何它必须立即发送的数据。</li>
+<li><p>接收方不通告小窗口。当「窗口大小」小于 min(MSS, 缓存空间 &#x2F; 2)时，就会向发送方通告窗口为 0，也就阻止了发送方再发数据过来。等到接收方处理了一些数据后，窗口大小&gt;&#x3D;min(MSS, 缓存空间 &#x2F; 2)，就可以把通告窗口让发送方发送数据过来。</p>
+</li>
+<li><p>发送方避免发送小数据。</p>
+<ul>
+<li>从应用程序收到的数据长度超过或者接近MSS时再发送出去。</li>
+<li>当应用程序发送数据的频率不高时，如果每次都等到长度接近MSS再发送，可能等待时间过长造成延迟。因此，协议栈内部有一个计时器，当经过一定时间后，即使长度没有达到MSS，也应该立刻发出去。</li>
 </ul>
 </li>
 </ol>
-<h2 id="多路IO复用？"><a href="#多路IO复用？" class="headerlink" title="多路IO复用？"></a>多路IO复用？</h2><h2 id="如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？"><a href="#如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？" class="headerlink" title="如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？"></a>如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？</h2>
+<h2 id="如果TCP握手过程出现丢包了会怎么样？"><a href="#如果TCP握手过程出现丢包了会怎么样？" class="headerlink" title="如果TCP握手过程出现丢包了会怎么样？"></a>如果TCP握手过程出现丢包了会怎么样？</h2><h3 id="第一个报文丢失"><a href="#第一个报文丢失" class="headerlink" title="第一个报文丢失"></a>第一个报文丢失</h3><blockquote>
+<p>参考《TCP&#x2F;IP详解》18.3 连接建立的超时</p>
+</blockquote>
+<p>假设服务端故障，客户端没有收到ACK，会超时重传SYN包。最多重试三次，如果三次都无应答包，则客户端放弃建联。（认为服务端故障）</p>
+<h3 id="第二个报文丢失"><a href="#第二个报文丢失" class="headerlink" title="第二个报文丢失"></a>第二个报文丢失</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://network.51cto.com/article/609022.html">https://network.51cto.com/article/609022.html</a></p>
+</blockquote>
+<p>服务端发送了「SYN,ACK」，没有收到应答，对于服务端而言，触发超时重传。操作系统可以设置重传次数的阈值，超过次数后服务端会自动关闭这个连接。</p>
+<p>而客户端没有收到「SYN,ACK」时，也会进行「SYN」报文重传。当服务端收到重传的第一个包后，会立刻回复第二个包。</p>
+<h3 id="第三个报文丢失"><a href="#第三个报文丢失" class="headerlink" title="第三个报文丢失"></a>第三个报文丢失</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://network.51cto.com/article/609022.html">https://network.51cto.com/article/609022.html</a></p>
+</blockquote>
+<p>如果最后一个「ACK」包丢了，服务端因为收不到「ACK」会走重传机制，而客户端此时进入 ESTABLISHED 状态。</p>
+<p>多数情况下，客户端进入 ESTABLISHED 状态后，则认为连接已建立，会立即发送数据。但是服务端因为没有收到最后一个「ACK」包，依然处于 SYN-RCVD 状态。</p>
+<p>当客户端在 ESTABLISHED 状态下，开始发送数据包时，会携带上一个「ACK」的确认序号，所以哪怕客户端响应的「ACK」包丢了，服务端在收到这个数据包时，能够通过包内 ACK 的确认序号，正常进入 ESTABLISHED 状态。</p>
+
     </div>
 
     
@@ -455,7 +482,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%86%B5"><span class="nav-number">2.</span> <span class="nav-text">TCP基本概况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AD%94%E7%96%91%E8%A7%A3%E6%83%91"><span class="nav-number">3.</span> <span class="nav-text">答疑解惑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BD%95TCP%E5%8D%8F%E8%AE%AE%E6%8F%A1%E6%89%8B%E8%A6%81%E8%AE%BE%E8%AE%A1%E6%88%90%E4%B8%89%E6%AC%A1%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">为何TCP协议握手要设计成三次？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BD%95TCP%E5%8D%8F%E8%AE%AE%E6%8C%A5%E6%89%8B%E9%9C%80%E8%A6%81%E5%9B%9B%E6%AC%A1%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">为何TCP协议挥手需要四次？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81TIME-WAIT%E7%8A%B6%E6%80%81%EF%BC%9F%E4%B8%BA%E4%BD%95TIME-WAIT%E7%AD%89%E5%BE%85%E6%97%B6%E9%97%B4%E6%98%AF2MSL%EF%BC%9FTIME-WAIT%E8%BF%87%E5%A4%9A%E7%9A%84%E5%8D%B1%E5%AE%B3%EF%BC%9F"><span class="nav-number">3.3.</span> <span class="nav-text">为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E8%A6%81TIME-WAIT%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.3.1.</span> <span class="nav-text">需要TIME_WAIT的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIME-WAIT%E4%B8%BA2MSL%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.3.2.</span> <span class="nav-text">TIME_WAIT为2MSL的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIME-WAIT%E8%BF%87%E5%A4%9A%E7%9A%84%E5%8D%B1%E5%AE%B3"><span class="nav-number">3.3.3.</span> <span class="nav-text">TIME_WAIT过多的危害</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SYN%E6%94%BB%E5%87%BB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%EF%BC%9F"><span class="nav-number">3.4.</span> <span class="nav-text">SYN攻击是什么？如何避免？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%B5%81%E7%A8%8B"><span class="nav-number">3.4.1.</span> <span class="nav-text">正常流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SYN%E6%94%BB%E5%87%BB%E6%97%B6"><span class="nav-number">3.4.2.</span> <span class="nav-text">SYN攻击时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">3.4.3.</span> <span class="nav-text">避免方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%B7%B2%E7%BB%8F%E5%BB%BA%E7%AB%8B%E4%BA%86%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AA%81%E7%84%B6%E6%95%85%E9%9A%9C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">3.5.</span> <span class="nav-text">如果已经建立了连接，客户端突然故障了怎么办？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IP%E5%B1%82%E7%9A%84MTU%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9FTCP%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81MSS%EF%BC%9F"><span class="nav-number">3.6.</span> <span class="nav-text">IP层的MTU是什么？TCP为什么需要MSS？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6%E4%B8%AD%E7%9A%84SACK%EF%BC%88Selective-Acknowledgment-%E9%80%89%E6%8B%A9%E6%80%A7%E7%A1%AE%E8%AE%A4%EF%BC%89%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9FDuplicate-SACK%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.7.</span> <span class="nav-text">重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SACK"><span class="nav-number">3.7.1.</span> <span class="nav-text">SACK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-SACK"><span class="nav-number">3.7.2.</span> <span class="nav-text">D-SACK</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%AA%97%E5%8F%A3%E5%85%B3%E9%97%AD%E6%97%B6%EF%BC%8C%E6%BD%9C%E5%9C%A8%E7%9A%84%E6%AD%BB%E9%94%81%E7%8E%B0%E8%B1%A1%E5%91%A2%EF%BC%9F"><span class="nav-number">3.8.</span> <span class="nav-text">TCP 是如何解决窗口关闭时，潜在的死锁现象呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E4%B8%AD%E7%9A%84%E7%B3%8A%E6%B6%82%E7%AA%97%E5%8F%A3%E7%BB%BC%E5%90%88%E7%97%87%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%EF%BC%9F"><span class="nav-number">3.9.</span> <span class="nav-text">流量控制中的糊涂窗口综合症是什么？如何避免？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AFIO%E5%A4%8D%E7%94%A8%EF%BC%9F"><span class="nav-number">3.10.</span> <span class="nav-text">多路IO复用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9CTCP%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E5%87%BA%E7%8E%B0%E9%97%AE%E9%A2%98%E4%BA%86%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%B6%88%E6%81%AF%E4%B8%A2%E5%8C%85%E4%BA%86%E4%BC%9A%E6%80%8E%E6%A0%B7%EF%BC%9F%E7%AC%AC%E4%BA%8C%E4%B8%AA%E6%B6%88%E6%81%AF%E4%B8%A2%E5%8C%85%E4%BA%86%E4%BC%9A%E6%80%8E%E6%A0%B7%EF%BC%9F%E7%AC%AC%E4%B8%89%E4%B8%AA%E6%B6%88%E6%81%AF%E4%B8%A2%E5%8C%85%E4%BA%86%E4%BC%9A%E6%80%8E%E6%A0%B7%EF%BC%9F"><span class="nav-number">3.11.</span> <span class="nav-text">如果TCP握手过程出现问题了会怎么样？第一个消息丢包了会怎样？第二个消息丢包了会怎样？第三个消息丢包了会怎样？</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%86%B5"><span class="nav-number">2.</span> <span class="nav-text">TCP基本概况</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E5%8F%98%E8%BF%81"><span class="nav-number">2.1.</span> <span class="nav-text">状态变迁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E4%BF%9D%E8%AF%81%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93"><span class="nav-number">2.2.</span> <span class="nav-text">TCP保证可靠传输</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AD%94%E7%96%91%E8%A7%A3%E6%83%91"><span class="nav-number">3.</span> <span class="nav-text">答疑解惑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BD%95TCP%E5%8D%8F%E8%AE%AE%E6%8F%A1%E6%89%8B%E8%A6%81%E8%AE%BE%E8%AE%A1%E6%88%90%E4%B8%89%E6%AC%A1%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">为何TCP协议握手要设计成三次？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BD%95TCP%E5%8D%8F%E8%AE%AE%E6%8C%A5%E6%89%8B%E9%9C%80%E8%A6%81%E5%9B%9B%E6%AC%A1%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">为何TCP协议挥手需要四次？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81TIME-WAIT%E7%8A%B6%E6%80%81%EF%BC%9F%E4%B8%BA%E4%BD%95TIME-WAIT%E7%AD%89%E5%BE%85%E6%97%B6%E9%97%B4%E6%98%AF2MSL%EF%BC%9FTIME-WAIT%E8%BF%87%E5%A4%9A%E7%9A%84%E5%8D%B1%E5%AE%B3%EF%BC%9F"><span class="nav-number">3.3.</span> <span class="nav-text">为什么需要TIME_WAIT状态？为何TIME_WAIT等待时间是2MSL？TIME_WAIT过多的危害？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E8%A6%81TIME-WAIT%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.3.1.</span> <span class="nav-text">需要TIME_WAIT的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIME-WAIT%E4%B8%BA2MSL%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.3.2.</span> <span class="nav-text">TIME_WAIT为2MSL的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIME-WAIT%E8%BF%87%E5%A4%9A%E7%9A%84%E5%8D%B1%E5%AE%B3"><span class="nav-number">3.3.3.</span> <span class="nav-text">TIME_WAIT过多的危害</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SYN%E6%94%BB%E5%87%BB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%EF%BC%9F"><span class="nav-number">3.4.</span> <span class="nav-text">SYN攻击是什么？如何避免？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%B5%81%E7%A8%8B"><span class="nav-number">3.4.1.</span> <span class="nav-text">正常流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SYN%E6%94%BB%E5%87%BB%E6%97%B6"><span class="nav-number">3.4.2.</span> <span class="nav-text">SYN攻击时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">3.4.3.</span> <span class="nav-text">避免方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%B7%B2%E7%BB%8F%E5%BB%BA%E7%AB%8B%E4%BA%86%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AA%81%E7%84%B6%E6%95%85%E9%9A%9C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">3.5.</span> <span class="nav-text">如果已经建立了连接，客户端突然故障了怎么办？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IP%E5%B1%82%E7%9A%84MTU%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9FTCP%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81MSS%EF%BC%9F"><span class="nav-number">3.6.</span> <span class="nav-text">IP层的MTU是什么？TCP为什么需要MSS？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6%E4%B8%AD%E7%9A%84SACK%EF%BC%88Selective-Acknowledgment-%E9%80%89%E6%8B%A9%E6%80%A7%E7%A1%AE%E8%AE%A4%EF%BC%89%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9FDuplicate-SACK%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.7.</span> <span class="nav-text">重传机制中的SACK（Selective Acknowledgment 选择性确认）是什么？Duplicate SACK是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SACK"><span class="nav-number">3.7.1.</span> <span class="nav-text">SACK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-SACK"><span class="nav-number">3.7.2.</span> <span class="nav-text">D-SACK</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%AA%97%E5%8F%A3%E5%85%B3%E9%97%AD%E6%97%B6%EF%BC%8C%E6%BD%9C%E5%9C%A8%E7%9A%84%E6%AD%BB%E9%94%81%E7%8E%B0%E8%B1%A1%E5%91%A2%EF%BC%9F"><span class="nav-number">3.8.</span> <span class="nav-text">TCP 是如何解决窗口关闭时，潜在的死锁现象呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E4%B8%AD%E7%9A%84%E7%B3%8A%E6%B6%82%E7%AA%97%E5%8F%A3%E7%BB%BC%E5%90%88%E7%97%87%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%EF%BC%9F"><span class="nav-number">3.9.</span> <span class="nav-text">流量控制中的糊涂窗口综合症是什么？如何避免？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9CTCP%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E5%87%BA%E7%8E%B0%E4%B8%A2%E5%8C%85%E4%BA%86%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-number">3.10.</span> <span class="nav-text">如果TCP握手过程出现丢包了会怎么样？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%8A%A5%E6%96%87%E4%B8%A2%E5%A4%B1"><span class="nav-number">3.10.1.</span> <span class="nav-text">第一个报文丢失</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E6%8A%A5%E6%96%87%E4%B8%A2%E5%A4%B1"><span class="nav-number">3.10.2.</span> <span class="nav-text">第二个报文丢失</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E6%8A%A5%E6%96%87%E4%B8%A2%E5%A4%B1"><span class="nav-number">3.10.3.</span> <span class="nav-text">第三个报文丢失</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -519,12 +546,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">33k</span>
+    <span title="Symbols count total">38k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">30 mins.</span>
+    <span title="Reading time total">34 mins.</span>
 </div>
 
         
