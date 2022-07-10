@@ -158,6 +158,101 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/10/operating-system-introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Ran">
+      <meta itemprop="description" content="talk is cheap. 知行合一">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="复方汤剂">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/10/operating-system-introduction/" class="post-title-link" itemprop="url">operating-system-introduction</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-07-10 19:28:41 / Modified: 22:18:20" itemprop="dateCreated datePublished" datetime="2022-07-10T19:28:41+08:00">2022-07-10</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>715</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>本文主要是参考了《操作系统导论》这本书，豆瓣链接：<a target="_blank" rel="noopener" href="https://book.douban.com/subject/33463930/">https://book.douban.com/subject/33463930/</a></p>
+</blockquote>
+<p>《操作系统导论》主要有三个主题：虚拟化（Virtualization）、并发（Concurrency）和持久化（Persistence），我觉得总结得很好，让人茅塞顿开。操作系统的这些设计思想让人啧啧称奇，惊叹不已。本篇读书笔记也按照这三个主题来进行组织：</p>
+<ul>
+<li>虚拟化：包括CPU虚拟化和内存虚拟化。</li>
+<li>并发</li>
+<li>持久性。由于时间关系，这一章节本人只读了I&#x2F;O设备，其它内容改日再补充。</li>
+</ul>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>操作系统实际上做了这些事情：它取得 CPU、内存或磁盘等物理资源 （resources），甚对它们进行虚拟化（virtualize）。它处理与并发（concurrency）有关的问题。它持久地（persistently）存储文件。</p>
+<p>在设计和实现这样的操作系统时，我们有以下这些目标：</p>
+<ul>
+<li><strong>建立抽象，让系统方便和易于使用。</strong>例如，用 C语言这样的高级语言编写程序则不用考虑汇编，用汇编写代码则不用考虑逻辑门，用逻辑门来构建处理器就不用太多考虑晶体管。</li>
+<li><strong>最小化操作系统的开销。</strong>这些开销会以多种形式出现：额外的时间（更多指令）和额外空间（内存或磁盘上）。我们需要权衡开销。</li>
+<li><strong>在 OS 和应用程序之间提供保护（protection）。</strong><ul>
+<li>我们希望让许多程序同时运行，所以要确保一个程序的恶意或偶然的不良行为不会损害其他程序。</li>
+<li>我们也不希望应用程序能够损害操作系统本身（因为这会影响系统上运行的所有程序）。</li>
+<li>让进程彼此隔离是保护的关键，因此决定了 OS 必须执行的大部分任务。</li>
+</ul>
+</li>
+<li><strong>操作系统需要提供可靠性。</strong></li>
+</ul>
+<h1 id="虚拟化"><a href="#虚拟化" class="headerlink" title="虚拟化"></a>虚拟化</h1><h2 id="CPU虚拟化"><a href="#CPU虚拟化" class="headerlink" title="CPU虚拟化"></a>CPU虚拟化</h2><p>首先我们先简要介绍一下进程。</p>
+<h2 id="内存虚拟化"><a href="#内存虚拟化" class="headerlink" title="内存虚拟化"></a>内存虚拟化</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/09/what-happens-after-opening-the-url/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -189,7 +284,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-10 18:33:44" itemprop="dateModified" datetime="2022-07-10T18:33:44+08:00">2022-07-10</time>
+                <time title="Modified: 2022-07-10 21:39:54" itemprop="dateModified" datetime="2022-07-10T21:39:54+08:00">2022-07-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -227,7 +322,7 @@
 
       
           <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
-<p> 本文主要参考了《网络是怎样连接的》这本书</p>
+<p> 本文主要参考了《网络是怎样连接的》这本书，豆瓣链接：<a target="_blank" rel="noopener" href="https://book.douban.com/subject/26941639/">https://book.douban.com/subject/26941639/</a></p>
 </blockquote>
 <p>从用户在浏览器地址栏输入url并按下回车开始，到浏览器完全显示出网页这整个过程，本文将其总结分为四个阶段：</p>
 <ul>
@@ -829,7 +924,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -838,6 +933,11 @@
           
         <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -877,12 +977,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">48k</span>
+    <span title="Symbols count total">49k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">44 mins.</span>
+    <span title="Reading time total">45 mins.</span>
 </div>
 
         
