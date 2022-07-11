@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-07-11T01:31:28.435Z</updated>
+  <updated>2022-07-11T01:37:35.018Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://example.com/2022/07/10/operating-system-introduction/"/>
     <id>http://example.com/2022/07/10/operating-system-introduction/</id>
     <published>2022-07-10T11:28:41.000Z</published>
-    <updated>2022-07-11T01:31:28.435Z</updated>
+    <updated>2022-07-11T01:37:35.018Z</updated>
     
     <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote><p>本文主要是参考了《操作系统导论》这本书，豆瓣链接：<a href="https://book.douban.com/subject/33463930/">https://book.douban.com/subject/33463930/</a></p></blockquote><p>《操作系统导论》主要有三个主题：虚拟化（Virtualization）、并发（Concurrency）和持久化（Persistence），我觉得总结得很好，让人茅塞顿开。操作系统的这些设计思想让人啧啧称奇，惊叹不已。本篇读书笔记也按照这三个主题来进行组织整理：</p><ul><li>虚拟化：包括CPU虚拟化和内存虚拟化。</li><li>并发</li><li>持久性。由于时间关系，这一章节本人只读了I&#x2F;O设备，其它内容改日再补充。</li></ul><span id="more"></span><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>操作系统实际上做了这些事情：它取得 CPU、内存或磁盘等物理资源 （resources），甚对它们进行虚拟化（virtualize）。它处理与并发（concurrency）有关的问题。它持久地（persistently）存储文件。</p><p>在设计和实现这样的操作系统时，我们有以下这些目标：</p><ul><li><strong>建立抽象，让系统方便和易于使用。</strong>例如，用 C语言这样的高级语言编写程序则不用考虑汇编，用汇编写代码则不用考虑逻辑门，用逻辑门来构建处理器就不用太多考虑晶体管。</li><li><strong>最小化操作系统的开销。</strong>这些开销会以多种形式出现：额外的时间（更多指令）和额外空间（内存或磁盘上）。我们需要权衡开销。</li><li><strong>在 OS 和应用程序之间提供保护（protection）。</strong><ul><li>我们希望让许多程序同时运行，所以要确保一个程序的恶意或偶然的不良行为不会损害其他程序。</li><li>我们也不希望应用程序能够损害操作系统本身（因为这会影响系统上运行的所有程序）。</li><li>让进程彼此隔离是保护的关键，因此决定了 OS 必须执行的大部分任务。</li></ul></li><li><strong>操作系统需要提供可靠性。</strong></li></ul><h1 id="虚拟化"><a href="#虚拟化" class="headerlink" title="虚拟化"></a>虚拟化</h1><h2 id="CPU虚拟化"><a href="#CPU虚拟化" class="headerlink" title="CPU虚拟化"></a>CPU虚拟化</h2><p>首先我们先简要介绍一下进程。进程就是运行中的程序。程序本身是没有生命周期的，它只是存在磁盘上面的一些指令（也可能是一些静态数据）。是操作系统让这些字节运行起来。</p><p>人们常常希望同时运行多个程序。操作系统通过时分共 享（time sharing）CPU 技术——让一个进程只运行一个时间片，然后切换到其他进程——来虚拟化CPU，让用户能够如愿运行多个并发程序。</p><p>为了实现CPU的虚拟化，操作系统有一些<strong>机制</strong>和<strong>策略</strong>。<strong>机制是指一些底层方法或协议</strong>，实现了所需要的功能，例如上下文切换技术。<strong>策略是指操作系统做出某种决定的算法</strong>，例如进程调度策略。</p><p>接下来将会分为进程概况、机制和策略三个部分来阐述。</p><p>&#x2F;&#x2F;TODO：后续笔记还没写，只是先把目录列出来了</p><h3 id="进程概况"><a href="#进程概况" class="headerlink" title="进程概况"></a>进程概况</h3><h3 id="机制：受限直接执行"><a href="#机制：受限直接执行" class="headerlink" title="机制：受限直接执行"></a>机制：受限直接执行</h3><h3 id="策略：进程调度"><a href="#策略：进程调度" class="headerlink" title="策略：进程调度"></a>策略：进程调度</h3><h2 id="内存虚拟化"><a href="#内存虚拟化" class="headerlink" title="内存虚拟化"></a>内存虚拟化</h2><h3 id="地址空间概况"><a href="#地址空间概况" class="headerlink" title="地址空间概况"></a>地址空间概况</h3><h3 id="机制：地址转换"><a href="#机制：地址转换" class="headerlink" title="机制：地址转换"></a>机制：地址转换</h3><h3 id="机制：交换空间"><a href="#机制：交换空间" class="headerlink" title="机制：交换空间"></a>机制：交换空间</h3><h3 id="策略：页替换策略"><a href="#策略：页替换策略" class="headerlink" title="策略：页替换策略"></a>策略：页替换策略</h3><h1 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h1><h2 id="并发概况"><a href="#并发概况" class="headerlink" title="并发概况"></a>并发概况</h2><h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h2 id="条件变量"><a href="#条件变量" class="headerlink" title="条件变量"></a>条件变量</h2><h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><h2 id="基于事件的并发"><a href="#基于事件的并发" class="headerlink" title="基于事件的并发"></a>基于事件的并发</h2><h1 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h1><h2 id="I-x2F-O设备"><a href="#I-x2F-O设备" class="headerlink" title="I&#x2F;O设备"></a>I&#x2F;O设备</h2><h3 id=""><a href="#" class="headerlink" title=""></a></h3>]]></content>
     
@@ -38,8 +38,8 @@
     
     
     
+    <category term="操作系统" scheme="http://example.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
-    <category term="操作系统" scheme="http://example.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
