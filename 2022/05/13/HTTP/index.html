@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="简介本文主要聚焦以下内容：  HTTP简要介绍  HTTPS简要介绍  HTTP简要发展史">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于HTTP不可不说的那些事">
+<meta property="og:url" content="http://example.com/2022/05/13/HTTP/index.html">
+<meta property="og:site_name" content="复方汤剂">
+<meta property="og:description" content="简介本文主要聚焦以下内容：  HTTP简要介绍  HTTPS简要介绍  HTTP简要发展史">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/HTTP/authorization.png">
+<meta property="og:image" content="http://example.com/images/HTTP/cookie.png">
+<meta property="og:image" content="http://example.com/images/HTTP/token.png">
+<meta property="og:image" content="http://example.com/images/HTTP/oauth_process.png">
+<meta property="og:image" content="http://example.com/images/HTTP/first_request.png">
+<meta property="og:image" content="http://example.com/images/HTTP/second_request.png">
+<meta property="og:image" content="http://example.com/images/HTTP/ssl_handshake.png">
+<meta property="og:image" content="http://example.com/images/HTTP/http2_data.png">
+<meta property="og:image" content="http://example.com/images/HTTP/http2_multiplex.png">
+<meta property="og:image" content="http://example.com/images/HTTP/http2_blocking.png">
+<meta property="article:published_time" content="2022-05-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-12T16:00:00.000Z">
+<meta property="article:author" content="Ran">
+<meta property="article:tag" content="计算机网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/HTTP/authorization.png">
+
+
+<link rel="canonical" href="http://example.com/2022/05/13/HTTP/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2022/05/13/HTTP/","path":"2022/05/13/HTTP/","title":"关于HTTP不可不说的那些事"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>关于HTTP不可不说的那些事 | 复方汤剂</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="Search" role="button">
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">复方汤剂</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="Toggle navigation bar" role="button">
+      <i class="fa fa-ellipsis fa-fw fa-lg"></i>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">HTTP简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-number">2.1.</span> <span class="nav-text">常见状态码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81HEADERS%E5%AD%97%E6%AE%B5"><span class="nav-number">2.2.</span> <span class="nav-text">常见HEADERS字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GET%E5%92%8CPOST"><span class="nav-number">2.3.</span> <span class="nav-text">GET和POST</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.3.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GET%E5%92%8CPOST%E6%98%AF%E5%AE%89%E5%85%A8%E5%92%8C%E5%B9%82%E7%AD%89%E7%9A%84%E5%90%97%EF%BC%9F"><span class="nav-number">2.3.2.</span> <span class="nav-text">GET和POST是安全和幂等的吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP%E9%89%B4%E6%9D%83"><span class="nav-number">2.4.</span> <span class="nav-text">HTTP鉴权</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-Basic-Authentication"><span class="nav-number">2.4.1.</span> <span class="nav-text">HTTP Basic Authentication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#session-cookie"><span class="nav-number">2.4.2.</span> <span class="nav-text">session-cookie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Token"><span class="nav-number">2.4.3.</span> <span class="nav-text">Token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OAuth%EF%BC%88Open-Authorization"><span class="nav-number">2.4.4.</span> <span class="nav-text">OAuth（Open Authorization)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%92%E8%89%B2"><span class="nav-number">2.4.4.1.</span> <span class="nav-text">角色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E6%B5%81%E7%A8%8B"><span class="nav-number">2.4.4.2.</span> <span class="nav-text">协议流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0"><span class="nav-number">2.5.</span> <span class="nav-text">断点续传</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E6%98%AF%E5%90%A6%E6%94%AF%E6%8C%81%E8%8C%83%E5%9B%B4%E8%AF%B7%E6%B1%82"><span class="nav-number">2.5.1.</span> <span class="nav-text">检测服务器端是否支持范围请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E8%AF%B7%E6%B1%82%E7%89%B9%E5%AE%9A%E7%9A%84%E8%8C%83%E5%9B%B4"><span class="nav-number">2.5.2.</span> <span class="nav-text">从服务端请求特定的范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E9%87%8D%E8%8C%83%E5%9B%B4"><span class="nav-number">2.5.3.</span> <span class="nav-text">多重范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%BC%8F%E8%8C%83%E5%9B%B4%E8%AF%B7%E6%B1%82"><span class="nav-number">2.5.4.</span> <span class="nav-text">条件式范围请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8C%83%E5%9B%B4%E8%AF%B7%E6%B1%82%E7%9A%84%E5%93%8D%E5%BA%94"><span class="nav-number">2.5.5.</span> <span class="nav-text">范围请求的响应</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6"><span class="nav-number">2.6.</span> <span class="nav-text">HTTP缓存机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS%E7%AE%80%E4%BB%8B"><span class="nav-number">3.</span> <span class="nav-text">HTTPS简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">3.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS-%E8%BF%9E%E6%8E%A5%E5%BB%BA%E7%AB%8B%E8%BF%87%E7%A8%8B"><span class="nav-number">3.2.</span> <span class="nav-text">HTTPS 连接建立过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E7%AE%80%E8%A6%81%E5%8F%91%E5%B1%95%E5%8F%B2%EF%BC%88%E6%80%A7%E8%83%BD%E7%9B%B8%E5%85%B3%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">HTTP简要发展史（性能相关）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-1-1%E4%B8%8EHTTP-1-0%E7%9B%B8%E6%AF%94"><span class="nav-number">4.1.</span> <span class="nav-text">HTTP&#x2F;1.1与HTTP&#x2F;1.0相比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-2%E4%B8%8EHTTP-1-1%E7%9B%B8%E6%AF%94"><span class="nav-number">4.2.</span> <span class="nav-text">HTTP&#x2F;2与HTTP&#x2F;1.1相比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%88%86%E5%B8%A7"><span class="nav-number">4.2.1.</span> <span class="nav-text">二进制分帧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">4.2.2.</span> <span class="nav-text">多路复用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%B4%E9%83%A8%E5%8E%8B%E7%BC%A9"><span class="nav-number">4.2.3.</span> <span class="nav-text">头部压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A8%E9%80%81"><span class="nav-number">4.2.4.</span> <span class="nav-text">服务器推送</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#QUIC%E4%B8%8EHTTP-2%E7%9B%B8%E6%AF%94"><span class="nav-number">4.3.</span> <span class="nav-text">QUIC与HTTP&#x2F;2相比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E9%98%9F%E5%A4%B4%E9%98%BB%E5%A1%9E%E7%9A%84%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">4.3.1.</span> <span class="nav-text">没有队头阻塞的多路复用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E5%BB%BA%E7%AB%8B%E5%BB%B6%E6%97%B6%E4%BD%8E"><span class="nav-number">4.3.2.</span> <span class="nav-text">连接建立延时低</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E8%BF%81%E7%A7%BB"><span class="nav-number">4.3.3.</span> <span class="nav-text">连接迁移</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ran"
+      src="https://github.com/Iris-in-my-garden.png">
+  <p class="site-author-name" itemprop="name">Ran</p>
+  <div class="site-description" itemprop="description">两眼一睁就是学</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Iris-in-my-garden" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Iris-in-my-garden" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/13/HTTP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/Iris-in-my-garden.png">
+      <meta itemprop="name" content="Ran">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="复方汤剂">
+      <meta itemprop="description" content="两眼一睁就是学">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="关于HTTP不可不说的那些事 | 复方汤剂">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关于HTTP不可不说的那些事
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-05-13 00:00:00" itemprop="dateCreated datePublished" datetime="2022-05-13T00:00:00+08:00">2022-05-13</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-lines"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>5.5k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>20 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本文主要聚焦以下内容：</p>
+<ol>
+<li><p>HTTP简要介绍</p>
+</li>
+<li><p>HTTPS简要介绍</p>
+</li>
+<li><p>HTTP简要发展史</p>
+<span id="more"></span></li>
+</ol>
+<h1 id="HTTP简介"><a href="#HTTP简介" class="headerlink" title="HTTP简介"></a>HTTP简介</h1><p>HTTP(HyperText Transfer Protocol)，超文本传输协议。</p>
+<h2 id="常见状态码"><a href="#常见状态码" class="headerlink" title="常见状态码"></a>常见状态码</h2><blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status</a></p>
+</blockquote>
+<ul>
+<li>1xx：提示信息 （实践中还没遇到过…）</li>
+<li>2xx：成功响应<ul>
+<li>200：OK，一切正常，响应头有Body数据</li>
+<li>204：No Content，对于该请求没有的内容可发送，但头部字段可能有用，即响应头无body数据</li>
+<li>206：Partial Content，返回一部分数据，用于HTTP分块下载或者续传。表示请求已成功，并且主体包含所请求的数据区间，该数据区间是在请求的 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Range"><code>Range</code></a> 首部指定的。</li>
+</ul>
+</li>
+<li>3xx：资源变动，重定向。<ul>
+<li>301： Moved Permanently，说明请求的资源已经被移动到了由 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Location"><code>Location</code></a> 头部指定的 url 上，是固定的不会再改变。需要使用新的url来访问。（浏览器会自动跳转）</li>
+<li>302： Found，表明请求的资源被暂时的移动到了由该 HTTP 响应的响应头 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Location"><code>Location</code></a> 指定的 URL 上。需要使用新的url来访问。（浏览器会自动跳转）</li>
+<li>304：Not Modified，说明无需再次传输请求的内容，也就是说可以使用缓存的内容。</li>
+</ul>
+</li>
+<li>4xx：客户端发送的报文错误<ul>
+<li>400：Bad Request，表示由于语法无效，服务器无法理解该请求。</li>
+<li>403：Forbidden，指的是服务器端有能力处理该请求，但是拒绝授权访问。</li>
+<li>404：Not Found，服务器端无法找到所请求的资源。</li>
+</ul>
+</li>
+<li>5xx：服务器错误<ul>
+<li>500：Internal Server Error，表示服务器端错误的响应状态码，意味着所请求的服务器遇到意外的情况并阻止其执行请求。通用的“万能”响应代码。</li>
+<li>501：Not Implemented，表示请求的方法不被服务器支持，因此无法被处理。服务器必须支持的方法（即不会返回这个状态码的方法）只有 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/GET"><code>GET</code></a> 和 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/HEAD"><code>HEAD</code></a>。</li>
+<li>502：Bad Gateway，表示作为网关或代理角色的服务器，从上游服务器中接收到的响应是无效的。</li>
+<li>503：Service Unavailable，表示服务器尚未处于可以接受请求的状态，无法响应请求。</li>
+</ul>
+</li>
+</ul>
+<h2 id="常见HEADERS字段"><a href="#常见HEADERS字段" class="headerlink" title="常见HEADERS字段"></a>常见HEADERS字段</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers</a></p>
+</blockquote>
+<ul>
+<li>Host请求头：指明了请求将要发送到的服务器主机名和端口号。如果没有包含端口号，会自动使用被请求服务的默认端口（比如HTTPS URL 使用 443 端口，HTTP URL 使用 80 端口）</li>
+<li>Content-Length：指明发送给接收方的消息主体的大小，单位是字节，用十进制表示。</li>
+<li>Connection：决定当前的事务完成后，是否会关闭网络连接。如果该值是“keep-alive”，网络连接就是持久的，不会关闭，使得对同一个服务器的请求可以继续在该连接上完成，即复用该TCP连接。注：HTTP&#x2F;1.1版本默认连接都是持久的，但为了兼容老版本，还是需要指明“keep-alive”。</li>
+<li>Content-Type：告诉客户端实际返回的内容的内容类型。客户端请求时，通过Accept字段声明自己可以接受哪些数据格式。</li>
+<li>Content-Encoding：指明服务器返回的数据使用了什么压缩格式。户端请求时，通过Accept-Encoding字段声明自己可以接受哪些压缩方法。</li>
+</ul>
+<h2 id="GET和POST"><a href="#GET和POST" class="headerlink" title="GET和POST"></a>GET和POST</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods</a></p>
+</blockquote>
+<ul>
+<li>GET：请求指定的资源。使用 <code>GET</code> 的请求应该只用于获取数据。请求无body。</li>
+<li>POST：发送数据给服务器。请求主体的类型由 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Type"><code>Content-Type</code></a> 首部指定，内容放在body里。</li>
+</ul>
+<h3 id="GET和POST是安全和幂等的吗？"><a href="#GET和POST是安全和幂等的吗？" class="headerlink" title="GET和POST是安全和幂等的吗？"></a>GET和POST是安全和幂等的吗？</h3><blockquote>
+<p>幂等的解释：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Glossary/Idempotent">https://developer.mozilla.org/zh-CN/docs/Glossary/Idempotent</a></p>
+</blockquote>
+<ul>
+<li>安全：请求方法不会破坏服务器上的资源。我的理解是，请求方法不会对服务器上的资源进行增删改操作（写操作）。</li>
+<li>幂等：同样的请求被执行一次与连续执行多次的效果是一样的，服务器的状态也是一样的。</li>
+</ul>
+<p>根据这两个定义，我们可以看到：</p>
+<ol>
+<li>GET方法<strong>是安全而且幂等</strong> 的，因为GET方法实际上只是对服务器上的资源进行了读操作，并且每次执行的结果都是相等的。</li>
+<li>POST方法<strong>不是安全</strong> 的，因为POST方法会修改服务器上的资源；POST方法也<strong>不是幂等</strong> 的，因为多次提交数据会产生多个资源，比如购物网站会提示请勿重复提交订单。</li>
+</ol>
+<h2 id="HTTP鉴权"><a href="#HTTP鉴权" class="headerlink" title="HTTP鉴权"></a>HTTP鉴权</h2><p>目前我们常用的鉴权有四种：</p>
+<ul>
+<li>HTTP Basic Authentication</li>
+<li>session-cookie</li>
+<li>Token</li>
+<li>OAuth(Open Authorization)</li>
+</ul>
+<h3 id="HTTP-Basic-Authentication"><a href="#HTTP-Basic-Authentication" class="headerlink" title="HTTP Basic Authentication"></a>HTTP Basic Authentication</h3><blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Authentication">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Authentication</a></p>
+</blockquote>
+<p>这种授权方式是浏览器遵守http协议实现的基本授权方式，HTTP协议进行通信的过程中，HTTP协议定义了基本认证允许HTTP服务器对客户端进行用户身份证的方法。流程如下：</p>
+<ul>
+<li>客户端向服务器请求数据</li>
+<li>服务器向客户端发送验证请求代码401</li>
+<li>当符合http1.0或1.1规范的浏览器（如IE，FIREFOX）收到401返回值时，将自动弹出一个登录窗口，要求用户输入用户名和密码。</li>
+<li>用户输入用户名和密码后，将用户名及密码以BASE64进行编码，之后请求信息会多一个Authorization字段，字段的内容就是编码后的内容。</li>
+<li>服务器收到上述请求信息后，将 <code>Authorization</code> 字段后的用户信息取出、解码，将解码后的用户名及密码与用户数据库进行比较验证，如用户名及密码正确，服务器则根据请求，将所请求资源发送给客户端；否则就返回403 Forbidden。</li>
+</ul>
+<p>流程如图所示：</p>
+<p><img src="/images/HTTP/authorization.png"></p>
+<p><strong>在上图所示的基本身份验证过程中，信息交换须通过 HTTPS(TLS) 连接来保证安全。</strong></p>
+<h3 id="session-cookie"><a href="#session-cookie" class="headerlink" title="session-cookie"></a>session-cookie</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Cookies%E3%80%81">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Cookies、</a></p>
+</blockquote>
+<p>HTTP Cookie（也叫 Web Cookie 或浏览器 Cookie）是服务器发送到用户浏览器并保存在本地的一小块数据，它会在浏览器下次向同一服务器再发起请求时被携带并发送到服务器上。通常，它用于告知服务端两个请求是否来自同一浏览器，如保持用户的登录状态。Cookie 使基于无状态的 HTTP 协议记录稳定的状态信息成为了可能。</p>
+<p>Cookie 主要用于以下三个方面：</p>
+<ul>
+<li>会话状态管理（如用户登录状态、购物车、游戏分数或其它需要记录的信息）</li>
+<li>个性化设置（如用户自定义设置、主题等）</li>
+<li>浏览器行为跟踪（如跟踪分析用户行为等）</li>
+</ul>
+<p>当服务器收到 HTTP 请求时，服务器可以在响应头里面添加一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Set-Cookie"><code>Set-Cookie</code></a> 选项。浏览器收到响应后通常会保存下 Cookie，之后对该服务器每一次请求中都通过 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cookie"><code>Cookie</code></a> 请求头部将 Cookie 信息发送给服务器。另外，Cookie 的过期时间、域、路径、有效期、适用站点都可以根据需要来指定。</p>
+<p>Cookie 的生命周期可以通过两种方式定义：</p>
+<ul>
+<li>会话期 Cookie 是最简单的 Cookie：浏览器关闭之后它会被自动删除，也就是说它仅在会话期内有效。会话期 Cookie 不需要指定过期时间（<code>Expires</code>）或者有效期（<code>Max-Age</code>）。需要注意的是，有些浏览器提供了会话恢复功能，这种情况下即使关闭了浏览器，会话期 Cookie 也会被保留下来，就好像浏览器从来没有关闭一样，这会导致 Cookie 的生命周期无限期延长。</li>
+<li>持久性 Cookie 的生命周期取决于过期时间（<code>Expires</code>）或有效期（<code>Max-Age</code>）指定的一段时间。</li>
+</ul>
+<p>session包含了用户信息，以key-value的形式存储在服务端，其中key为sessionId，value为用户信息。cookie包含了session id，存储在客户端。客户端访问服务器的流程如下：</p>
+<p><img src="/images/HTTP/cookie.png"></p>
+<h3 id="Token"><a href="#Token" class="headerlink" title="Token"></a>Token</h3><p>Token可以分为Acess Token和Refresh Token。</p>
+<p><strong>Acess Token：</strong> 访问资源接口（API）时所需要的资源凭证，流程如下：</p>
+<p><img src="/images/HTTP/token.png"></p>
+<p>每一次请求都需要携带 token。基于 token 的用户认证是一种服务端无状态的认证方式，服务端不用存放 token 数据。用解析 token 的计算时间换取 session 的存储空间，从而减轻服务器的压力，减少频繁的查询数据库。</p>
+<p><strong>refresh token：</strong> 是专用于刷新 access token 的 token，流程如下：</p>
+<h3 id="OAuth（Open-Authorization"><a href="#OAuth（Open-Authorization" class="headerlink" title="OAuth（Open Authorization)"></a>OAuth（Open Authorization)</h3><blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://deepzz.com/post/what-is-oauth2-protocol.html">https://deepzz.com/post/what-is-oauth2-protocol.html</a></p>
+</blockquote>
+<p>最终目的是为第三方应用颁发一个有时效性的令牌 token。使得第三方应用能够通过该令牌获取相关的资源。常见的场景就是：第三方登录。</p>
+<p>举例而言，当你想用浏览器登录某个论坛，但没有账号，而这个论坛接入了如 QQ、Facebook 等登录功能，在你使用 QQ 登录的过程中就使用的 OAuth 2.0 协议。</p>
+<h4 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h4><p>首先需要介绍的是 OAuth 2.0 协议中的一些角色，整个授权协议的流程都将围绕着这些角色：</p>
+<ul>
+<li><code>resource owner</code>，资源所有者，能够允许访问受保护资源的实体。比如例子里的QQ。</li>
+<li><code>resource server</code>，资源服务器，托管受保护资源的服务器。比如例子里的QQ存储账号信息的服务器。</li>
+<li><code>client</code>，客户端，它使用资源所有者的授权发起对受保护资源的请求。比如例子里的某个论坛。</li>
+<li><code>authorization server</code>，授权服务器，能够向客户端颁发令牌。比如例子里的QQ账号的授权服务器。</li>
+<li><code>user-agent</code>，用户代理，帮助资源所有者与客户端沟通的工具，比如例子里的浏览器。</li>
+</ul>
+<h4 id="协议流程"><a href="#协议流程" class="headerlink" title="协议流程"></a>协议流程</h4><p>协议流程如图所示：</p>
+<p><img src="/images/HTTP/oauth_process.png"></p>
+<h2 id="断点续传"><a href="#断点续传" class="headerlink" title="断点续传"></a>断点续传</h2><blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Range_requests">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Range_requests</a></p>
+</blockquote>
+<p>HTTP 协议范围请求允许服务器只发送 HTTP 消息的一部分到客户端。范围请求在传送大的媒体文件，或者与文件下载的断点续传功能搭配使用时非常有用。</p>
+<h3 id="检测服务器端是否支持范围请求"><a href="#检测服务器端是否支持范围请求" class="headerlink" title="检测服务器端是否支持范围请求"></a>检测服务器端是否支持范围请求</h3><p>假如在响应中存在 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Accept-Ranges"><code>Accept-Ranges</code></a> 首部（并且它的值不为 “none”），那么表示该服务器支持范围请求。例如，你可以使用 curl 发送一个 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/HEAD"><code>HEAD</code></a> 请求来进行检测。</p>
+<pre><code>curl -I http://i.imgur.com/z4d4kWk.jpg  
+
+HTTP/1.1 200 OK  
+...  
+Accept-Ranges: bytes  
+Content-Length: 146515  
+</code></pre>
+<p>在上面的响应中， <code>Accept-Ranges: bytes</code> 表示界定范围的单位是 bytes 。这里 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Length"><code>Content-Length</code></a> 也是有效信息，因为它提供了要检索的图片的完整大小。</p>
+<p>如果站点未发送 <code>Accept-Ranges</code> 首部，那么它们有可能不支持范围请求。一些站点会明确将其值设置为 “none”，以此来表明不支持。在这种情况下，某些应用的下载管理器会将暂停按钮禁用。</p>
+<h3 id="从服务端请求特定的范围"><a href="#从服务端请求特定的范围" class="headerlink" title="从服务端请求特定的范围"></a>从服务端请求特定的范围</h3><p>假如服务器支持范围请求的话，你可以使用 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Range"><code>Range</code></a> 首部来生成该类请求。该首部指示服务器应该返回文件的哪一或哪几部分。例如：</p>
+<pre><code>GET /z4d4kWk.jpg HTTP/1.1  
+Host: i.imgur.com  
+Range: bytes=0-1023  
+</code></pre>
+<p>服务器端会返回状态码为 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/206"><code>206</code></a> <code>Partial Content</code> 的响应：</p>
+<pre><code>HTTP/1.1 206 Partial Content  
+Content-Range: bytes 0-1023/146515  
+Content-Length: 1024  
+...  
+(binary content)  
+</code></pre>
+<p>在这里，<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Length"><code>Content-Length</code></a> 首部现在用来表示先前请求范围的大小（而不是整张图片的大小）。<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Range"><code>Content-Range</code></a> 响应首部则表示这一部分内容在整个资源中所处的位置。</p>
+<h3 id="多重范围"><a href="#多重范围" class="headerlink" title="多重范围"></a>多重范围</h3><p>Range 头部也支持一次请求文档的多个部分。请求范围用一个逗号分隔开。</p>
+<p>服务器返回 206 Partial Content 状态码和 Content-Type：multipart&#x2F;byteranges; boundary&#x3D;3d6b6a416f9b5 头部，Content-Type：multipart&#x2F;byteranges 表示这个响应有多个 byterange。每一部分 byterange 都有他自己的 Content-type 头部和 Content-Range，并且使用 boundary 参数对 body 进行划分。</p>
+<h3 id="条件式范围请求"><a href="#条件式范围请求" class="headerlink" title="条件式范围请求"></a>条件式范围请求</h3><p>当（中断之后）重新开始请求更多资源片段的时候，必须确保自从上一个片段被接收之后该资源没有进行过修改。</p>
+<p>The <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/If-Range"><code>If-Range</code></a> 请求首部可以用来生成条件式范围请求：假如条件满足的话，条件请求就会生效，服务器会返回状态码为 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/206"><code>206</code></a> <code>Partial </code>的响应，以及相应的消息主体。假如条件未能得到满足，那么就会返回状态码为 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/200"><code>200</code></a> <code>OK</code> 的响应，同时返回整个资源。该首部可以与 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Last-Modified"><code>Last-Modified</code></a> 验证器或者 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/ETag"><code>ETag</code></a> 一起使用，但是二者不能同时使用。</p>
+<h3 id="范围请求的响应"><a href="#范围请求的响应" class="headerlink" title="范围请求的响应"></a>范围请求的响应</h3><p>与范围请求相关的有三种状态：</p>
+<ul>
+<li>在请求成功的情况下，服务器会返回 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/206"><code>206</code></a> <code>Partial Content</code> 状态码。</li>
+<li>在请求的范围越界的情况下（范围值超过了资源的大小），服务器会返回 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/416"><code>416</code></a> <code>Requested Range Not Satisfiable</code> （请求的范围无法满足）状态码。</li>
+<li>在不支持范围请求的情况下，服务器会返回 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/200"><code>200</code></a> <code>OK</code> 状态码。</li>
+</ul>
+<h2 id="HTTP缓存机制"><a href="#HTTP缓存机制" class="headerlink" title="HTTP缓存机制"></a>HTTP缓存机制</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903838768431118">https://juejin.cn/post/6844903838768431118</a></p>
+</blockquote>
+<p><strong>强制缓存</strong></p>
+<p>利用Cache-Control字段实现。流程如下：</p>
+<ul>
+<li>当浏览器第一次请求访问服务器资源时，服务器会在返回这个资源的同时，在 Response 头部加上 Cache-Control，Cache-Control 中设置了过期时间大小；</li>
+<li>浏览器再次请求访问服务器中的该资源时，会先<strong>通过请求资源的时间与 Cache-Control 中设置的过期时间大小，来计算出该资源是否过期</strong> ，如果没有，则使用该缓存，否则重新请求服务器；</li>
+<li>服务器再次收到请求后，会再次更新 Response 头部的 Cache-Control。</li>
+</ul>
+<p><strong>协商缓存</strong></p>
+<p>向服务器发送请求，服务器会根据这个请求的request header的一些参数来判断是否命中协商缓存，如果命中，则返回304状态码并带上新的response header通知浏览器从缓存中读取资源。</p>
+<p>可以利用字段<code>ETag</code> 和 <code>If-None-Match</code> ：</p>
+<ul>
+<li>响应头部中 <code>Etag</code>：唯一标识响应资源；</li>
+<li>请求头部中的 <code>If-None-Match</code>：当资源过期时，浏览器发现响应头里有 Etag，则再次向服务器发起请求时，会将请求头If-None-Match 值设置为 Etag 的值。服务器收到请求后进行比对，如果资源没有变化返回 304，如果资源变化了返回 200。</li>
+</ul>
+<p>也可利用字段<code>Last-Modified</code>和<code>If-Modified-Since</code>：</p>
+<ul>
+<li>响应头部中的 <code>Last-Modified</code>：标示这个响应资源的最后修改时间；</li>
+<li>请求头部中的 <code>If-Modified-Since</code>：当资源过期了（浏览器判断Cache-Control标识的max-age过期），发现响应头中具有 Last-Modified 声明，则再次发起请求的时候带上if-modified-since，表示请求时间，服务器收到请求后发现有 If-Modified-Since 则与被请求资源的最后修改时间进行对比（Last-Modified），如果最后修改时间较新（大），说明资源又被改过，则返回最新资源，HTTP 200 OK；如果最后修改时间较旧（小），说明资源无新修改，响应 <strong>HTTP 304</strong> 走缓存（状态码304的场景！）。</li>
+</ul>
+<p>浏览器第一次请求时流程：</p>
+<p><img src="/images/HTTP/first_request.png"></p>
+<p>第二次请求相同网页时：</p>
+<p><img src="/images/HTTP/second_request.png"></p>
+<h1 id="HTTPS简介"><a href="#HTTPS简介" class="headerlink" title="HTTPS简介"></a>HTTPS简介</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>HTTP可能存在以下问题：</p>
+<ul>
+<li>被窃听。http明文传输。</li>
+<li>被篡改。中间人攻击。</li>
+<li>认证问题。服务器身份可能为假；客户端身份为假；</li>
+</ul>
+<p>超文本传输安全协议（英语：Hypertext Transfer Protocol Secure，缩写：HTTPS，常称为HTTP over TLS，HTTP over SSL或HTTP Secure）是一种通过计算机网络进行安全通信的传输协议。HTTPS经由HTTP进行通信，但利用SSL&#x2F;TLS来加密数据包。HTTPS开发的主要目的，是提供对网站服务器的身份认证，保护交换数据的隐私与完整性。</p>
+<p>HTTPS特点：</p>
+<ul>
+<li>机密性：传输密文</li>
+<li>完整性：Hash算法</li>
+<li>身份认证：数字证书</li>
+</ul>
+<h2 id="HTTPS-连接建立过程"><a href="#HTTPS-连接建立过程" class="headerlink" title="HTTPS 连接建立过程"></a>HTTPS 连接建立过程</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903608421449742">https://juejin.cn/post/6844903608421449742</a></p>
+</blockquote>
+<p>首先需要先建立TCP连接。</p>
+<p>其次进行SSL握手，流程如下：</p>
+<p><img src="/images/HTTP/ssl_handshake.png"></p>
+<h1 id="HTTP简要发展史（性能相关）"><a href="#HTTP简要发展史（性能相关）" class="headerlink" title="HTTP简要发展史（性能相关）"></a>HTTP简要发展史（性能相关）</h1><h2 id="HTTP-1-1与HTTP-1-0相比"><a href="#HTTP-1-1与HTTP-1-0相比" class="headerlink" title="HTTP&#x2F;1.1与HTTP&#x2F;1.0相比"></a>HTTP&#x2F;1.1与HTTP&#x2F;1.0相比</h2><ul>
+<li>长连接：keep-alive</li>
+<li>支持pipeline（用户端并行发请求，但服务端处理请求还是串行，服务端需要按顺序响应收到的请求，如果服务端处理某个请求消耗的时间比较长，那么只能等相应完这个请求后， 才能处理下一个请求，这是HTTP 层队头阻塞的问题。实际上pipeline功能基本没人用）。</li>
+</ul>
+<h2 id="HTTP-2与HTTP-1-1相比"><a href="#HTTP-2与HTTP-1-1相比" class="headerlink" title="HTTP&#x2F;2与HTTP&#x2F;1.1相比"></a>HTTP&#x2F;2与HTTP&#x2F;1.1相比</h2><blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903734670000142">https://juejin.cn/post/6844903734670000142</a></p>
+</blockquote>
+<h3 id="二进制分帧"><a href="#二进制分帧" class="headerlink" title="二进制分帧"></a>二进制分帧</h3><p>头信息和数据体都是二进制编码，并且统称为帧（frame）：头信息帧（Headers Frame）和数据帧（Data Frame），如图所示：</p>
+<p><img src="/images/HTTP/http2_data.png"></p>
+<h3 id="多路复用"><a href="#多路复用" class="headerlink" title="多路复用"></a>多路复用</h3><blockquote>
+<p>http2队头阻塞参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32553477">https://zhuanlan.zhihu.com/p/32553477</a></p>
+</blockquote>
+<p>三个概念:</p>
+<ul>
+<li>流（Stream）：已建立的TCP连接上的双向字节流，可以承载一个或多个消息。</li>
+<li>消息（Message）：一个完整的HTTP请求或响应，由一个或多个帧组成。特定消息的帧在同一个流上发送，这意味着一个HTTP请求或响应只能在一个流上发送。</li>
+<li>帧（Frame）：通信的基本单位。<br>一个TCP连接上可以有任意数量的流。</li>
+</ul>
+<p>HTTP2建立一个TCP连接，一个连接上面可以有任意多个流（stream），消息分割成一个或多个帧在流里面传输。帧传输过去以后，再进行重组，形成一个完整的请求或响应。如图所示：</p>
+<p><img src="/images/HTTP/http2_multiplex.png"></p>
+<p>HTTP&#x2F;2.0传输层仍然是TCP，我理解仍然会有队头阻塞（TCP层）的现象存在。TCP 是字节流协议，TCP 层必须保证收到的字节数据是完整且连续的，这样内核才会将缓冲区里的数据返回给 HTTP 应用，那么当「前 1 个字节数据」没有到达时，后收到的字节数据只能存放在内核缓冲区里，只有等到这 1 个字节数据到达时，HTTP&#x2F;2 应用层才能从内核中拿到数据。如图所示：</p>
+<p><img src="/images/HTTP/http2_blocking.png"></p>
+<h3 id="头部压缩"><a href="#头部压缩" class="headerlink" title="头部压缩"></a>头部压缩</h3><p>如果你同时发出多个请求，他们的头是一样的或是相似的，那么，协议会帮你消除重复的部分。</p>
+<p>这就是所谓的 <code>HPACK</code> 算法：在客户端和服务器同时维护一张头信息表，所有字段都会存入这个表，生成一个索引号，以后就不发送同样字段了，只发送索引号，这样就提高速度了。</p>
+<h3 id="服务器推送"><a href="#服务器推送" class="headerlink" title="服务器推送"></a>服务器推送</h3><p>服务器端推送使得服务器可以预测客户端需要的资源，主动推送到客户端。例如：客户端请求index.html，服务器端能够额外推送script.js和style.css。 实现原理就是客户端发出页面请求时，服务器端能够分析这个页面所依赖的其他资源，主动推送到客户端。</p>
+<h2 id="QUIC与HTTP-2相比"><a href="#QUIC与HTTP-2相比" class="headerlink" title="QUIC与HTTP&#x2F;2相比"></a>QUIC与HTTP&#x2F;2相比</h2><blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32553477">https://zhuanlan.zhihu.com/p/32553477</a></p>
+</blockquote>
+<p>QUIC（Quick UDP Internet Connections），直译过来就是“快速的 UDP 互联网连接”，是 Google 基于 UDP 提出的一种改进的通信协议，作为传统 HTTP over TCP 的替代品。</p>
+<h3 id="没有队头阻塞的多路复用"><a href="#没有队头阻塞的多路复用" class="headerlink" title="没有队头阻塞的多路复用"></a>没有队头阻塞的多路复用</h3><p>QUIC 的多路复用和 HTTP2 类似。在一条 QUIC 连接上可以并发发送多个 HTTP 请求 (stream)。但是 QUIC 的多路复用相比 HTTP2 有一个很大的优势。QUIC 一个连接上的多个 stream 之间没有依赖。这样假如 stream2 丢了一个 udp packet，也只会影响 stream2 的处理。不会影响 stream2 之前及之后的 stream 的处理。如图所示：</p>
+<p>并不是所有的 QUIC 数据都不会受到队头阻塞的影响，比如 QUIC 当前也是使用 Hpack 压缩算法，由于算法的限制，丢失一个头部数据时，可能遇到队头阻塞。总体来说，QUIC 在传输大量数据时，比如视频，受到队头阻塞的影响很小。</p>
+<h3 id="连接建立延时低"><a href="#连接建立延时低" class="headerlink" title="连接建立延时低"></a>连接建立延时低</h3><p>传输层 0RTT 就能建立连接；加密层 0RTT 就能建立加密连接。</p>
+<p>对于 HTTP&#x2F;1 和 HTTP&#x2F;2 协议，TCP 和 TLS 是分层的，分别属于内核实现的传输层、openssl 库实现的表示层，因此它们难以合并在一起，需要分批次来握手，先 TCP 握手，再 TLS 握手。TCP握手约1.5RTT，TLS握手约1.5RTT，总共握手大约耗时3RTT。</p>
+<p>而QUIC 协议内部包含了 TLS，它在自己的帧会携带 TLS数据，再加上 QUIC 使用的是 TLS&#x2F;1.3，因此仅需 1 个 RTT 就可以同时完成建立连接与密钥协商。甚至在第二次连接的时候，应用数据包可以和 QUIC 握手信息（连接信息 + TLS 信息）一起发送。</p>
+<h3 id="连接迁移"><a href="#连接迁移" class="headerlink" title="连接迁移"></a>连接迁移</h3><p>基于 TCP 传输协议的 HTTP 协议，由四元组（源 IP、源端口、目的 IP、目的端口）确定一条 TCP 连接，那么当移动设备的网络从 4G 切换到 WIFI 时，意味着 IP 地址变化了，那么就必须要断开连接，然后重新建立连接。</p>
+<p>QUIC 协议不再以四元组来标识一条连接，而是以一个 连接ID 来进行标识，这样就算 IP 或者端口发生变化时，只要 ID 不变，这条连接依然维持着，上层业务逻辑感知不到变化，不会中断，也就不需要重连。从而实现了“连接迁移”。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"># 计算机网络</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/05/04/TCPConfusion/" rel="prev" title="关于TCP协议的一些疑惑">
+                  <i class="fa fa-angle-left"></i> 关于TCP协议的一些疑惑
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/06/28/Getting-to-know-redis/" rel="next" title="初识redis">
+                  初识redis <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="Ran"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ran</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Word count total: </span>
+    <span title="Word count total">40k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Reading time total &asymp;</span>
+    <span title="Reading time total">2:24</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
